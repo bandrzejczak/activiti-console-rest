@@ -1,0 +1,34 @@
+apply plugin: 'java'
+apply plugin: 'war'
+
+sourceCompatibility = 1.7
+version = '0.1_alfa'
+
+repositories {
+    mavenCentral()
+    maven{
+        url 'http://maven.restlet.org'
+    }
+}
+
+dependencies {
+    compile group: 'org.activiti', name: 'activiti-engine', version: '5.15.1'
+    compile group: 'org.activiti', name: 'activiti-spring', version: '5.15.1'
+    compile group: 'org.restlet.jee', name: 'org.restlet', version: '2.2.1'
+    compile group: 'org.restlet.jee', name: 'org.restlet.ext.spring', version: '2.2.1'
+    compile group: 'org.restlet.jee', name: 'org.restlet.ext.jackson', version: '2.2.1'
+    compile group: 'org.reflections', name: 'reflections', version: '0.9.8'
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.6'
+    runtime group: 'mysql', name: 'mysql-connector-java', version: '5.1.31'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'org.springframework', name: 'spring-test', version: '3.2.7.RELEASE'
+    testCompile 'com.google.code.gson:gson:2.3'
+    testRuntime group: 'com.h2database', name: 'h2', version: '1.4.178'
+    testRuntime group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
+}
+
+task karma(type:Exec){
+    commandLine 'karma', 'start', 'src/main/webapp/resources/config/karma.conf.js'
+}
+
+//test.dependsOn karma

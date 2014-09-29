@@ -1,0 +1,29 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="pl.edu.pw.ii.ActivitiConsole" />
+    <context:annotation-config />
+
+    <bean id="root" class="org.restlet.security.ChallengeAuthenticator">
+        <constructor-arg><null /></constructor-arg>
+        <constructor-arg value="false" />
+        <constructor-arg value="#{ T(org.restlet.data.ChallengeScheme).CUSTOM }" />
+        <constructor-arg value="ActivitiConsole" />
+        <constructor-arg ref="authenticationVerifier" />
+        <property name="next" ref="jsonVulnerabilityProtectionFilter" />
+    </bean>
+
+    <bean id="authenticationVerifier" class="pl.edu.pw.ii.ActivitiConsole.AuthenticationVerifier" />
+
+    <bean id="jsonVulnerabilityProtectionFilter" class="pl.edu.pw.ii.ActivitiConsole.JSONVulnerabilityProtectionFilter">
+        <property name="next" ref="router" />
+    </bean>
+
+    <bean id="router" class="pl.edu.pw.ii.ActivitiConsole.Router">
+        <property name="resourcesPackage" value="pl.edu.pw.ii.ActivitiConsole" />
+    </bean>
+
+</beans>
