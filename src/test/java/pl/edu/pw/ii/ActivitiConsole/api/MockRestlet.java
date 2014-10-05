@@ -3,6 +3,7 @@ package pl.edu.pw.ii.ActivitiConsole.api;
 import com.google.gson.Gson;
 import org.restlet.*;
 import org.restlet.data.*;
+import org.springframework.stereotype.Component;
 import pl.edu.pw.ii.ActivitiConsole.api.dataobjects.ValidateCredentialsDataIn;
 import pl.edu.pw.ii.ActivitiConsole.api.dataobjects.ValidateCredentialsDataOut;
 
@@ -10,6 +11,7 @@ import javax.annotation.Resource;
 
 import static org.junit.Assert.*;
 
+@Component
 public class MockRestlet {
     private static final String BASE_PATH = "/service";
     private static final String VALIDATE_CREDENTIALS_PATH = "/service/validateCredentials";

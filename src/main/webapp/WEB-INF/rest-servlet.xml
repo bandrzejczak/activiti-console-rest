@@ -16,14 +16,14 @@
         <property name="next" ref="jsonVulnerabilityProtectionFilter" />
     </bean>
 
-    <bean id="authenticationVerifier" class="pl.edu.pw.ii.ActivitiConsole.AuthenticationVerifier" />
+    <bean id="authenticationVerifier" class="pl.edu.pw.ii.ActivitiConsole.api.AuthenticationVerifier" />
 
-    <bean id="jsonVulnerabilityProtectionFilter" class="pl.edu.pw.ii.ActivitiConsole.JSONVulnerabilityProtectionFilter">
+    <bean id="jsonVulnerabilityProtectionFilter" class="pl.edu.pw.ii.ActivitiConsole.api.JSONVulnerabilityProtectionFilter">
         <property name="next" ref="router" />
     </bean>
 
-    <bean id="router" class="pl.edu.pw.ii.ActivitiConsole.Router">
-        <property name="resourcesPackage" value="pl.edu.pw.ii.ActivitiConsole" />
+    <bean id="router" class="pl.edu.pw.ii.ActivitiConsole.api.Router">
+        <property name="resourcesPackage" value="pl.edu.pw.ii.ActivitiConsole.api.resources" />
     </bean>
 
 </beans>
