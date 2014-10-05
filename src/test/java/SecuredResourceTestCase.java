@@ -1,11 +1,8 @@
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.identity.User;
 import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @ContextConfiguration({"file:src/test/resources/application-context.xml",
         "file:src/test/resources/rest-servlet.xml"})

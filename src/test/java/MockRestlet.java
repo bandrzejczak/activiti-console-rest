@@ -1,21 +1,14 @@
 import com.google.gson.Gson;
-import org.restlet.Request;
-import org.restlet.Response;
+import org.restlet.*;
 import org.restlet.data.*;
-import org.restlet.engine.header.Header;
-import org.restlet.security.ChallengeAuthenticator;
-import org.restlet.util.Series;
 import pl.edu.pw.ii.ActivitiConsole.dataobjects.ValidateCredentialsDataIn;
 import pl.edu.pw.ii.ActivitiConsole.dataobjects.ValidateCredentialsDataOut;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.*;
 
 public class MockRestlet {
-    private static final String AUTH_HEADER_NAME = "Authorization";
     private static final String BASE_PATH = "/service";
     private static final String VALIDATE_CREDENTIALS_PATH = "/service/validateCredentials";
 
@@ -24,7 +17,7 @@ public class MockRestlet {
     private Response response;
     private ChallengeResponse challengeResponse;
     @Resource(name="root")
-    private ChallengeAuthenticator authenticator;
+    private Restlet rootRestlet;
 
     public MockRestlet login(String login, String password){
         ValidateCredentialsDataIn validateCredentialsDataIn = new ValidateCredentialsDataIn();
@@ -70,7 +63,7 @@ public class MockRestlet {
 
     private void perform(){
         response = new Response(request);
-        authenticator.handle(request, response);
+        rootRestlet.handle(request, response);
     }
 
     public MockRestlet expectStatusToBe(int statusCode){
