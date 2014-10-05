@@ -1,11 +1,12 @@
-package pl.edu.pw.ii.ActivitiConsole;
+package pl.edu.pw.ii.ActivitiConsole.api.resources;
 
 import org.activiti.engine.IdentityService;
 import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.edu.pw.ii.ActivitiConsole.dataobjects.ValidateCredentialsDataIn;
-import pl.edu.pw.ii.ActivitiConsole.dataobjects.ValidateCredentialsDataOut;
+import pl.edu.pw.ii.ActivitiConsole.api.SpringResource;
+import pl.edu.pw.ii.ActivitiConsole.api.dataobjects.ValidateCredentialsDataIn;
+import pl.edu.pw.ii.ActivitiConsole.api.dataobjects.ValidateCredentialsDataOut;
 
 @SpringResource(value = "/validateCredentials", secured = false)
 public class ValidateCredentialsResource extends ServerResource {

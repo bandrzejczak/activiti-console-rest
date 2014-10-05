@@ -1,8 +1,10 @@
+package pl.edu.pw.ii.ActivitiConsole.api;
+
 import com.google.gson.Gson;
 import org.restlet.*;
 import org.restlet.data.*;
-import pl.edu.pw.ii.ActivitiConsole.dataobjects.ValidateCredentialsDataIn;
-import pl.edu.pw.ii.ActivitiConsole.dataobjects.ValidateCredentialsDataOut;
+import pl.edu.pw.ii.ActivitiConsole.api.dataobjects.ValidateCredentialsDataIn;
+import pl.edu.pw.ii.ActivitiConsole.api.dataobjects.ValidateCredentialsDataOut;
 
 import javax.annotation.Resource;
 

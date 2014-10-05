@@ -1,4 +1,4 @@
-package pl.edu.pw.ii.ActivitiConsole;
+package pl.edu.pw.ii.ActivitiConsole.api;
 
 import org.activiti.engine.IdentityService;
 import org.restlet.Request;

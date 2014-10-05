@@ -1,4 +1,4 @@
-package pl.edu.pw.ii.ActivitiConsole.dataobjects;
+package pl.edu.pw.ii.ActivitiConsole.api.dataobjects;
 
 public class ValidateCredentialsDataIn {
     private String login;

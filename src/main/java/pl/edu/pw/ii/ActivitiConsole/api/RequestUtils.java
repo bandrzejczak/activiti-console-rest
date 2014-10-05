@@ -1,4 +1,4 @@
-package pl.edu.pw.ii.ActivitiConsole;
+package pl.edu.pw.ii.ActivitiConsole.api;
 
 import org.restlet.Request;
 
