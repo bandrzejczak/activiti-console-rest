@@ -1,15 +1,15 @@
 package pl.edu.pw.ii.ActivitiConsole.api;
 
 import com.google.gson.Gson;
-import org.restlet.*;
+import org.restlet.Request;
+import org.restlet.Response;
+import org.restlet.Restlet;
 import org.restlet.data.*;
 import org.springframework.stereotype.Component;
-import pl.edu.pw.ii.ActivitiConsole.api.dataobjects.ValidateCredentialsDataIn;
-import pl.edu.pw.ii.ActivitiConsole.api.dataobjects.ValidateCredentialsDataOut;
 
 import javax.annotation.Resource;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @Component
 public class MockRestlet {

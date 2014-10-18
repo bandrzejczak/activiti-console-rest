@@ -6,7 +6,6 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.edu.pw.ii.ActivitiConsole.api.SpringResource;
-import pl.edu.pw.ii.ActivitiConsole.api.dataobjects.ValidateCredentialsDataIn;
 
 import java.util.ArrayList;
 import java.util.List;
