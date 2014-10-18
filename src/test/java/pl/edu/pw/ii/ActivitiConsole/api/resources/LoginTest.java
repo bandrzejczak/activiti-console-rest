@@ -17,31 +17,34 @@ public class LoginTest {
     private static final String INVALID_PASSWORD = "invalid";
 
 
-    @Test(expected = InvalidCredentialsException.class)
+    @Test
     public void unsuccessfulLogin(){
-        mockRestlet.logout()
+        mockRestlet
+                .logout()
                 .login(User.ADMIN.login, INVALID_PASSWORD)
-                .expectNotToBeAuthenticated();
-        unauthorizedEntry();
+                .get("/service/test")
+                .expectStatusToBe(401);
     }
 
     @Test
     public void unauthorizedEntry(){
-        mockRestlet.logout()
+        mockRestlet
+                .logout()
                 .get("/service/test")
                 .expectStatusToBe(401);
     }
 
     @Test
     public void successfulLogin(){
-        mockRestlet.logout()
-                .expectNotToBeAuthenticated()
-                .login(User.ADMIN.login, User.ADMIN.password)
-                .expectToBeAuthenticated();
-        authorizedEntry();
+        //when
+        mockRestlet
+                .login(User.ADMIN.login, User.ADMIN.password);
+
+        //then
+        expectToBeAuthorized();
     }
 
-    private void authorizedEntry() {
+    private void expectToBeAuthorized() {
         mockRestlet.get("/service/test")
                 .expectStatusToBe(200);
     }

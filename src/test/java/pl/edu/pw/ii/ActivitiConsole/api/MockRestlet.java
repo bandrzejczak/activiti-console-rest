@@ -14,7 +14,6 @@ import static org.junit.Assert.*;
 @Component
 public class MockRestlet {
     private static final String BASE_PATH = "/service";
-    private static final String VALIDATE_CREDENTIALS_PATH = "/service/validateCredentials";
 
     private Gson gson = new Gson();
     private Request request;
@@ -24,13 +23,6 @@ public class MockRestlet {
     private Restlet rootRestlet;
 
     public MockRestlet login(String login, String password){
-        ValidateCredentialsDataIn validateCredentialsDataIn = new ValidateCredentialsDataIn();
-        validateCredentialsDataIn.setLogin(login);
-        validateCredentialsDataIn.setPassword(password);
-        post(VALIDATE_CREDENTIALS_PATH, validateCredentialsDataIn);
-        ValidateCredentialsDataOut validateCredentialsDataOut = getEntity(ValidateCredentialsDataOut.class);
-        if(!validateCredentialsDataOut.isValid())
-            throw new InvalidCredentialsException();
         setChallengeResponse(login, password);
         return this;
     }
@@ -72,16 +64,6 @@ public class MockRestlet {
 
     public MockRestlet expectStatusToBe(int statusCode){
         assertEquals(statusCode, response.getStatus().getCode());
-        return this;
-    }
-
-    public MockRestlet expectToBeAuthenticated(){
-        assertNotNull(challengeResponse);
-        return this;
-    }
-
-    public MockRestlet expectNotToBeAuthenticated(){
-        assertNull(challengeResponse);
         return this;
     }
 
