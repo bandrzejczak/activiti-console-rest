@@ -48,3 +48,7 @@ dependencies {
 }
 
 cobertura.coverageFormats = ['html', 'xml']
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3.6'
+}
