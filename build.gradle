@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
     //compile dependencies
-    compile group: 'com.intellij', name: 'annotations', version: '12.0'
+    compile group: 'org.jetbrains', name: 'annotations', version: '13.0'
     compile group: 'org.activiti', name: 'activiti-engine', version: '5.15.1'
     compile group: 'org.activiti', name: 'activiti-spring', version: '5.15.1'
     compile group: 'org.restlet.jee', name: 'org.restlet', version: '2.2.1'
