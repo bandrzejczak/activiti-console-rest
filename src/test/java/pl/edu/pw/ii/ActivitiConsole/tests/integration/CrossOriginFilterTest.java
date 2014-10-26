@@ -10,8 +10,7 @@ import org.junit.Test;
 import pl.edu.pw.ii.ActivitiConsole.ActivitiConsoleApplication;
 import pl.edu.pw.ii.ActivitiConsole.configuration.ActivitiConsoleConfiguration;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-import static pl.edu.pw.ii.ActivitiConsole.tests.conditions.ContainsHeaderCondition.containsHeader;
+import static pl.edu.pw.ii.ActivitiConsole.tests.asserts.ClientResponseAssert.assertThat;
 
 public class CrossOriginFilterTest {
 
@@ -27,7 +26,7 @@ public class CrossOriginFilterTest {
     @Test
     public void authorizedEntry() {
         ClientResponse response = resource("/groups").header("Origin", EXAMPLE_ORIGIN).options(ClientResponse.class);
-        assertThat(response).is(containsHeader("Access-Control-Allow-Origin", EXAMPLE_ORIGIN));
+        assertThat(response).containsHeader("Access-Control-Allow-Origin", EXAMPLE_ORIGIN);
     }
 
     public WebResource resource(String path){

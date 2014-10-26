@@ -6,8 +6,8 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import pl.edu.pw.ii.ActivitiConsole.ActivitiAuthenticator;
-import pl.edu.pw.ii.ActivitiConsole.configuration.ActivitiConsoleConfiguration;
 import pl.edu.pw.ii.ActivitiConsole.ActivitiUser;
+import pl.edu.pw.ii.ActivitiConsole.configuration.ActivitiConsoleConfiguration;
 import pl.edu.pw.ii.ActivitiConsole.filters.JSONVulnerabilityProtectionFilter;
 
 import javax.servlet.DispatcherType;
