@@ -1,0 +1,18 @@
+server:
+  applicationConnectors:
+  - type: http
+    port: 7000
+  adminConnectors:
+  - type: http
+    port: 7001
+  gzip:
+    enabled: false
+crossOrigin:
+  allowedOrigins: "*"
+  allowedMethods: GET,POST,OPTIONS,DELETE,PUT,HEAD
+  allowedHeaders: origin, content-type, accept, authorization
+db:
+  type: mysql
+  url: jdbc:mysql://localhost:3306/activiti
+  userName: root
+  password: aszxqw12

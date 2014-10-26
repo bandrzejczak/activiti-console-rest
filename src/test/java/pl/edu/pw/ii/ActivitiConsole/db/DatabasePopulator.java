@@ -1,4 +1,4 @@
-package pl.edu.pw.ii.ActivitiConsole;
+package pl.edu.pw.ii.ActivitiConsole.db;
 
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.identity.Group;
@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-import pl.edu.pw.ii.ActivitiConsole.api.User;
+
+import java.util.Arrays;
 
 @Component
 public class DatabasePopulator implements ApplicationListener<ContextRefreshedEvent> {
@@ -18,13 +19,17 @@ public class DatabasePopulator implements ApplicationListener<ContextRefreshedEv
     @Override
     public void onApplicationEvent(final ContextRefreshedEvent event) {
         if (!populated) {
-            for(User user : User.values()) {
-                createUser(user);
-                createUserGroup(user);
-                addUserToUserGroup(user);
-            }
+            Arrays
+                .stream(User.values())
+                .forEach(this::createUserAndGroup);
             populated = true;
         }
+    }
+
+    private void createUserAndGroup(User user) {
+        createUser(user);
+        createUserGroup(user);
+        addUserToUserGroup(user);
     }
 
     private void createUser(User user) {

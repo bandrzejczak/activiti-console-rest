@@ -1,4 +1,4 @@
-package pl.edu.pw.ii.ActivitiConsole.api;
+package pl.edu.pw.ii.ActivitiConsole.db;
 
 public enum User {
     ADMIN("admin", "adminpass"),
