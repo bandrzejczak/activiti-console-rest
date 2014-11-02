@@ -78,6 +78,7 @@ task aggregateCodeCoverage(type: JacocoReport) {
         xml.enabled = true
         csv.enabled = false
         html.destination "${buildDir}/jacocoHtml"
+        xml.destination "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
 
