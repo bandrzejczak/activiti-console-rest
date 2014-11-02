@@ -13,7 +13,7 @@ crossOrigin:
   allowedMethods: GET,POST,OPTIONS,DELETE,PUT,HEAD
   allowedHeaders: origin, content-type, accept, authorization
 
-bpmEngineImplementationClass: pl.edu.pw.ii.BpmConsole.Activiti.ActivitiProcessEngineBuilder
+bpmProcessEngineBuilderClass: pl.edu.pw.ii.BpmConsole.Activiti.ActivitiProcessEngineBuilder
 
 db:
   type: mysql

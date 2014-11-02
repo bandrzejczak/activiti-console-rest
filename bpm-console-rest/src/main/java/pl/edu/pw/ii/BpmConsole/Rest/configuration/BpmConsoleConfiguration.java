@@ -21,7 +21,7 @@ public class BpmConsoleConfiguration extends Configuration {
 
     @JsonProperty
     @NotNull
-    public String bpmEngineImplementationClass;
+    public String bpmProcessEngineBuilderClass;
 
     public ApplicationContext springContext;
 

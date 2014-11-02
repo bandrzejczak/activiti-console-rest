@@ -7,7 +7,7 @@ server:
     port: 12346
   gzip:
     enabled: false
-bpmEngineImplementationClass: pl.edu.pw.ii.BpmConsole.Activiti.ActivitiProcessEngineBuilder
+bpmProcessEngineBuilderClass: pl.edu.pw.ii.BpmConsole.Activiti.ActivitiProcessEngineBuilder
 db:
   type: h2
   url:  jdbc:h2:mem:activiti;DB_CLOSE_DELAY=1000
