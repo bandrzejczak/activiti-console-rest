@@ -18,8 +18,8 @@ public class GroupsResource {
 
     @GET
     @Timed
-    public List<String> getUserGroups(@Auth ActivitiUser user){
-        return user.groups;
+    public test getUserGroups(@Auth ActivitiUser user){
+        return new test(user.groups.get(0));
     }
 
 }

@@ -1,0 +1,4 @@
+include 'bpm-console-value-objects'
+include 'bpm-console-interfaces'
+include 'bpm-console-activiti-driver'
+include 'bpm-console-rest'

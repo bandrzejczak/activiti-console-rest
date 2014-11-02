@@ -22,10 +22,14 @@ public class ActivitiConsoleApplication extends Application<ActivitiConsoleConfi
 
     @Override
     public void initialize(Bootstrap<ActivitiConsoleConfiguration> bootstrap) {
-        //TODO research what does it do?
-        bootstrap.getObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
         bootstrap.addBundle(new SpringBundle());
         bootstrap.addBundle(new FilterBundle());
+        setJacksonSerializationInclusion(bootstrap);
+    }
+
+    private void setJacksonSerializationInclusion(Bootstrap<ActivitiConsoleConfiguration> bootstrap) {
+        //Jackson will map to JSON only non-null properties
+        bootstrap.getObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
     @Override
