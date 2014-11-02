@@ -55,24 +55,12 @@ project(':bpm-console-rest') {
     }
 }
 
-
-task mergeCodeCoverage(type: JacocoMerge) {
-    dependsOn subprojects.jacocoTestReport
-    jacocoClasspath = jacocoClasspath = project(":bpm-console-rest").configurations.jacocoAnt +
-            project(":bpm-console-rest").sourceSets.test.runtimeClasspath
-    destinationFile = file("$buildDir/jacoco/test.exec")
-    doFirst { delete destinationFile }
-    executionData tasks.getByPath(":bpm-console-rest:test")
-}
-
 task aggregateCodeCoverage(type: JacocoReport) {
-    jacocoClasspath = jacocoClasspath = mergeCodeCoverage.jacocoClasspath
-    dependsOn mergeCodeCoverage
-    executionData mergeCodeCoverage.destinationFile
-    subprojects.each { sub ->
-        sourceSets sub.sourceSets.main
-    }
-
+    jacocoClasspath = jacocoClasspath = project(":bpm-console-rest").configurations.jacocoAnt
+    dependsOn = subprojects.test
+    sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
+    classDirectories =  files(subprojects.sourceSets.main.output)
+    executionData = files(subprojects.jacocoTestReport.executionData)
     reports {
         html.enabled = true
         xml.enabled = true
@@ -82,7 +70,9 @@ task aggregateCodeCoverage(type: JacocoReport) {
     }
 }
 
-
+coveralls {
+    sourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs).files.absolutePath
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.1'
