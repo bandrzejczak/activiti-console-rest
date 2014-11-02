@@ -1,0 +1,3 @@
+dependencies {
+    compile group: 'org.activiti', name: 'activiti-engine', version: '5.16.4'
+}

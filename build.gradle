@@ -1,4 +1,5 @@
 apply plugin: 'idea'
+apply plugin: 'jacoco'
 
 buildscript {
     repositories {
@@ -19,7 +20,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'jacoco'
 
-    group = 'pl.edu.pw.ii.ActivitiConsole'
+    group = 'pl.edu.pw.ii.BpmConsole'
     sourceCompatibility = 1.8
     version = '0.0.2'
 
@@ -33,12 +34,6 @@ subprojects {
 
     jacocoTestReport {
         dependsOn test
-        reports {
-            html.enabled = true
-            xml.enabled = true
-            csv.enabled = false
-            html.destination "${buildDir}/jacocoHtml"
-        }
     }
 }
 
@@ -59,6 +54,34 @@ project(':bpm-console-rest') {
         compile project(':bpm-console-activiti-driver')
     }
 }
+
+
+task mergeCodeCoverage(type: JacocoMerge) {
+    dependsOn subprojects.jacocoTestReport
+    jacocoClasspath = jacocoClasspath = project(":bpm-console-rest").configurations.jacocoAnt +
+            project(":bpm-console-rest").sourceSets.test.runtimeClasspath
+    destinationFile = file("$buildDir/jacoco/test.exec")
+    doFirst { delete destinationFile }
+    executionData tasks.getByPath(":bpm-console-rest:test")
+}
+
+task aggregateCodeCoverage(type: JacocoReport) {
+    jacocoClasspath = jacocoClasspath = mergeCodeCoverage.jacocoClasspath
+    dependsOn mergeCodeCoverage
+    executionData mergeCodeCoverage.destinationFile
+    subprojects.each { sub ->
+        sourceSets sub.sourceSets.main
+    }
+
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        csv.enabled = false
+        html.destination "${buildDir}/jacocoHtml"
+    }
+}
+
+
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.1'

@@ -11,6 +11,7 @@ crossOrigin:
   allowedOrigins: "*"
   allowedMethods: GET,POST,OPTIONS,DELETE,PUT,HEAD
   allowedHeaders: origin, content-type, accept, authorization
+bpmEngineImplementationClass: pl.edu.pw.ii.BpmConsole.Activiti.ActivitiProcessEngineBuilder
 db:
   type: h2
   url:  jdbc:h2:mem:activiti;DB_CLOSE_DELAY=1000
