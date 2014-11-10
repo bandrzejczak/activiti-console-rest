@@ -12,6 +12,7 @@ crossOrigin:
   allowedOrigins: "*"
   allowedMethods: GET,POST,OPTIONS,DELETE,PUT,HEAD
   allowedHeaders: origin, content-type, accept, authorization
+  exposedHeaders: Link
 
 bpmProcessEngineBuilderClass: pl.edu.pw.ii.BpmConsole.Activiti.ActivitiProcessEngineBuilder
 

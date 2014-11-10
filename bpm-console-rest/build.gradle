@@ -24,6 +24,7 @@ dependencies {
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.31'
     compile group: 'com.h2database', name: 'h2', version: '1.4.178'
 
+
     //test dependencies
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile group: 'io.dropwizard', name: 'dropwizard-testing', version: '0.7.1'

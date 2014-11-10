@@ -2,7 +2,9 @@ package pl.edu.pw.ii.BpmConsole.Rest.resources;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.auth.Auth;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pl.edu.pw.ii.BpmConsole.Interfaces.ProcessEngine;
 import pl.edu.pw.ii.BpmConsole.Rest.BpmUser;
 
 import javax.ws.rs.GET;
@@ -16,10 +18,13 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class GroupsResource {
 
+    @Autowired
+    ProcessEngine processEngine;
+
     @GET
     @Timed
     public List<String> getUserGroups(@Auth BpmUser user) {
-        return user.groups;
+        return processEngine.getUserGroups(user.id);
     }
 
 }

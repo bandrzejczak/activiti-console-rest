@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface ProcessEngine {
 
-    public void init();
+    void init();
 
     List<String> getUserGroups(String username);
 
