@@ -1,4 +1,4 @@
-package pl.edu.pw.ii.BpmConsole.Rest;
+package pl.edu.pw.ii.BpmConsole.Rest.filters;
 
 import java.util.List;
 

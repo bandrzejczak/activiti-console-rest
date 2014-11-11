@@ -1,6 +1,3 @@
-/*
- -- Works with JAX-RS 2.0 which is absent in Jersey 1 and Dropwizard 0.7
-
 package pl.edu.pw.ii.BpmConsole.Rest.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,7 +37,7 @@ public class LinkBuilder {
             ObjectMapper objectMapper = new ObjectMapper();
             StringWriter actionsWriter = new StringWriter();
             objectMapper.writeValue(actionsWriter, actions);
-            linkBuilder.param("actions", actionsWriter.toString());
+            linkBuilder.param("actions", actionsWriter.toString().replace("\"", "'"));
         } catch (IOException e) {
             e.printStackTrace();
             linkBuilder.param("actions", "{}");
@@ -48,4 +45,3 @@ public class LinkBuilder {
     }
 
 }
-*/

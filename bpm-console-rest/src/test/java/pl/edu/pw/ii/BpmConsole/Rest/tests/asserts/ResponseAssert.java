@@ -1,21 +1,23 @@
 package pl.edu.pw.ii.BpmConsole.Rest.tests.asserts;
 
-import com.sun.jersey.api.client.ClientResponse;
-import org.fest.assertions.api.AbstractAssert;
+
+import org.assertj.core.api.AbstractAssert;
+
+import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertTrue;
 
-public class ClientResponseAssert<T extends ClientResponseAssert<T>> extends AbstractAssert<ClientResponseAssert<T>, ClientResponse> {
+public class ResponseAssert<T extends ResponseAssert<T>> extends AbstractAssert<ResponseAssert<T>, Response> {
 
-    ClientResponse actual;
+    Response actual;
 
-    public ClientResponseAssert(ClientResponse actual) {
-        super(actual, ClientResponseAssert.class);
+    public ResponseAssert(Response actual) {
+        super(actual, ResponseAssert.class);
         this.actual = actual;
     }
 
-    public static ClientResponseAssert assertThat(ClientResponse response) {
-        return new ClientResponseAssert(response);
+    public static ResponseAssert assertThat(Response response) {
+        return new ResponseAssert(response);
     }
 
     public T containsHeader(String name, String value){

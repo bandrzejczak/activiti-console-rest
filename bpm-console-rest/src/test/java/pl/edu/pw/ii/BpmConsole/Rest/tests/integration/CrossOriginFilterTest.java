@@ -1,15 +1,16 @@
 package pl.edu.pw.ii.BpmConsole.Rest.tests.integration;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 import io.dropwizard.client.JerseyClientBuilder;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 import org.junit.ClassRule;
 import org.junit.Test;
 import pl.edu.pw.ii.BpmConsole.Rest.BpmConsoleApplication;
 import pl.edu.pw.ii.BpmConsole.Rest.configuration.BpmConsoleConfiguration;
-import pl.edu.pw.ii.BpmConsole.Rest.tests.asserts.ClientResponseAssert;
+import pl.edu.pw.ii.BpmConsole.Rest.tests.asserts.ResponseAssert;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 
 public class CrossOriginFilterTest {
 
@@ -24,13 +25,13 @@ public class CrossOriginFilterTest {
 
     @Test
     public void authorizedEntry() {
-        ClientResponse response = resource("/groups").header("Origin", EXAMPLE_ORIGIN).options(ClientResponse.class);
-        ClientResponseAssert.assertThat(response).containsHeader("Access-Control-Allow-Origin", EXAMPLE_ORIGIN);
+        Response response = target("/groups").request().header("Origin", EXAMPLE_ORIGIN).options();
+        ResponseAssert.assertThat(response).containsHeader("Access-Control-Allow-Origin", EXAMPLE_ORIGIN);
     }
 
-    public WebResource resource(String path){
+    public WebTarget target(String path){
         String url = String.format("http://localhost:%d%s", RULE.getLocalPort(), path);
-        return client.resource(url);
+        return client.target(url);
     }
 
 }

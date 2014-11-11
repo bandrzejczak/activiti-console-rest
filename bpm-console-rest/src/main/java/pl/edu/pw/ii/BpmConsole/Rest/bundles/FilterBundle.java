@@ -1,14 +1,17 @@
 package pl.edu.pw.ii.BpmConsole.Rest.bundles;
 
 import io.dropwizard.ConfiguredBundle;
-import io.dropwizard.auth.basic.BasicAuthProvider;
+import io.dropwizard.auth.AuthFactory;
+import io.dropwizard.auth.basic.BasicAuthFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
-import pl.edu.pw.ii.BpmConsole.Rest.BpmAuthenticator;
-import pl.edu.pw.ii.BpmConsole.Rest.BpmUser;
+import pl.edu.pw.ii.BpmConsole.Rest.filters.BpmAuthenticator;
+import pl.edu.pw.ii.BpmConsole.Rest.filters.BpmUser;
 import pl.edu.pw.ii.BpmConsole.Rest.configuration.BpmConsoleConfiguration;
 import pl.edu.pw.ii.BpmConsole.Rest.filters.JSONVulnerabilityProtectionFilter;
+
+import org.glassfish.hk2.utilities.Binder;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
@@ -43,9 +46,8 @@ public class FilterBundle implements ConfiguredBundle<BpmConsoleConfiguration> {
 
     private void addJSONVulnerabilityProtectionFilter() {
         environment
-                .servlets()
-                .addFilter("JSONVulnerabilityProtectionFilter", JSONVulnerabilityProtectionFilter.class)
-                .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+                .jersey()
+                .register(JSONVulnerabilityProtectionFilter.class);
     }
 
     private void addActivitiAuthenticatorFilter() {
@@ -54,10 +56,11 @@ public class FilterBundle implements ConfiguredBundle<BpmConsoleConfiguration> {
                 .register(getActivitiAuthenticator());
     }
 
-    private BasicAuthProvider<BpmUser> getActivitiAuthenticator() {
-        return new BasicAuthProvider<>(
+    private Binder getActivitiAuthenticator() {
+        return AuthFactory.binder(new BasicAuthFactory<>(
                 configuration.springContext.getBean(BpmAuthenticator.class),
-                "ActivitiAuthenticator"
-        );
+                "ActivitiAuthenticator",
+                BpmUser.class
+        ));
     }
 }

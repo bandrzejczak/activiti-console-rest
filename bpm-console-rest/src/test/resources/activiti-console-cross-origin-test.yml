@@ -5,8 +5,6 @@ server:
   adminConnectors:
   - type: http
     port: 12346
-  gzip:
-    enabled: false
 crossOrigin:
   allowedOrigins: "*"
   allowedMethods: GET,POST,OPTIONS,DELETE,PUT,HEAD

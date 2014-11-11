@@ -5,8 +5,6 @@ server:
   adminConnectors:
   - type: http
     port: 12346
-  gzip:
-    enabled: false
 
 bpmProcessEngineBuilderClass: pl.edu.pw.ii.BpmConsole.Activiti.ActivitiProcessEngineBuilder
 
