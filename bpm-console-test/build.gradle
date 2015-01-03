@@ -1,0 +1,3 @@
+dependencies {
+    compile 'org.assertj:assertj-core:1.7.1'
+}

@@ -6,7 +6,7 @@ server:
   - type: http
     port: 12346
 
-bpmProcessEngineBuilderClass: pl.edu.pw.ii.BpmConsole.Activiti.ActivitiProcessEngineBuilder
+bpmProcessEngineBuilderClass: pl.edu.pw.ii.bpmConsole.activiti.ActivitiProcessEngineBuilder
 
 db:
   type: h2

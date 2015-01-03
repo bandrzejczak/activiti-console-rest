@@ -1,0 +1,4 @@
+dependencies {
+    compile 'commons-io:commons-io:2.4'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.4.3'
+}

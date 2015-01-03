@@ -9,7 +9,7 @@ crossOrigin:
   allowedOrigins: "*"
   allowedMethods: GET,POST,OPTIONS,DELETE,PUT,HEAD
   allowedHeaders: origin, content-type, accept, authorization
-bpmProcessEngineBuilderClass: pl.edu.pw.ii.BpmConsole.Activiti.ActivitiProcessEngineBuilder
+bpmProcessEngineBuilderClass: pl.edu.pw.ii.bpmConsole.activiti.ActivitiProcessEngineBuilder
 db:
   type: h2
   url:  jdbc:h2:mem:activiti;DB_CLOSE_DELAY=1000

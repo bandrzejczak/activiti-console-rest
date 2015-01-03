@@ -12,7 +12,7 @@ crossOrigin:
   allowedHeaders: origin, content-type, accept, authorization
   exposedHeaders: Link
 
-bpmProcessEngineBuilderClass: pl.edu.pw.ii.BpmConsole.Activiti.ActivitiProcessEngineBuilder
+bpmProcessEngineBuilderClass: pl.edu.pw.ii.bpmConsole.activiti.ActivitiProcessEngineBuilder
 
 db:
   type: mysql

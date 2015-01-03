@@ -20,7 +20,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'jacoco'
 
-    group = 'pl.edu.pw.ii.BpmConsole'
+    group = 'pl.edu.pw.ii.bpmConsole'
     sourceCompatibility = 1.8
     version = '0.0.2'
 
@@ -29,7 +29,11 @@ subprojects {
     }
     
     dependencies {
-        
+        compile 'com.google.guava:guava:18.0'
+        testCompile 'junit:junit:4.12'
+        testCompile 'org.mockito:mockito-all:1.10.17'
+        testCompile 'org.assertj:assertj-core:1.7.1'
+        testCompile project(':bpm-console-test')
     }
 
     jacocoTestReport {
