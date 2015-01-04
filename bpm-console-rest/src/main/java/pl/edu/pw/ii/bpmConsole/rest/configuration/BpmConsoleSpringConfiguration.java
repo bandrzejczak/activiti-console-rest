@@ -16,7 +16,6 @@ import java.sql.SQLException;
 
 @Configuration
 @ComponentScan("pl.edu.pw.ii.bpmConsole.rest")
-@EnableTransactionManagement //TODO Do I need it now?
 public class BpmConsoleSpringConfiguration {
 
     @Autowired
@@ -25,11 +24,6 @@ public class BpmConsoleSpringConfiguration {
     @Bean
     public DataSource dataSource() throws SQLException {
         return DataSourceFactory.fromConfiguration(configuration.databaseConfiguration);
-    }
-
-    @Bean
-    public PlatformTransactionManager transactionManager() throws SQLException {
-        return new DataSourceTransactionManager(dataSource());
     }
 
     @Bean
