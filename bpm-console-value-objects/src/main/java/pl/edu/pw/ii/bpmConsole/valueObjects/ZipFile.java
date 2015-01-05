@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Spliterator;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -41,8 +43,8 @@ public class ZipFile implements Iterable<File> {
 
     private File createFile(ZipEntry entry, ZipInputStream zipInputStream) throws IOException {
         File file = new File(IOUtils.toByteArray(zipInputStream));
-        file.filename = stripFromPath(entry.getName());
-        file.filesize = entry.getSize();
+        file.fileName = stripFromPath(entry.getName());
+        file.fileSize = entry.getSize();
         return file;
     }
 
@@ -66,6 +68,10 @@ public class ZipFile implements Iterable<File> {
     public Spliterator<File> spliterator() {
         unzipIfNecessary();
         return filesInsideZip.spliterator();
+    }
+
+    public Stream<File> stream(){
+        return StreamSupport.stream(spliterator(), false);
     }
 
     private void unzipIfNecessary() {

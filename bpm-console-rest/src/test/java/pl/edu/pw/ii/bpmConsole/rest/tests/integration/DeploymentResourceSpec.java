@@ -28,7 +28,8 @@ public class DeploymentResourceSpec extends BpmIntegrationTest {
         //given
         File singleProcess = new File();
         singleProcess.base64 = new Base64Resource(DEPLOYMENT_PATH).toString();
-        singleProcess.filename = DEPLOYMENT_FILE;
+        singleProcess.fileName = DEPLOYMENT_FILE;
+        singleProcess.fileSize = (long) 1;
         //when
         Response response = target(DEPLOYMENT_RESOURCE_PATH)
                 .request()
@@ -43,7 +44,8 @@ public class DeploymentResourceSpec extends BpmIntegrationTest {
         //given
         File singleProcess = new File();
         singleProcess.base64 = new Base64Resource(DEPLOYMENT_ZIP_PATH).toString();
-        singleProcess.filename = DEPLOYMENT_ZIP_FILE;
+        singleProcess.fileName = DEPLOYMENT_ZIP_FILE;
+        singleProcess.fileSize = (long) 1;
         //when
         Response response = target(DEPLOYMENT_RESOURCE_PATH)
                 .request()

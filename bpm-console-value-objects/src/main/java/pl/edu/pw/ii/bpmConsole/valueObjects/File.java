@@ -2,14 +2,18 @@ package pl.edu.pw.ii.bpmConsole.valueObjects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.validation.constraints.NotNull;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.zip.ZipInputStream;
 
 public class File {
-    public Long filesize;
-    public String filename;
+    @NotNull
+    public String fileName;
+    @NotNull
+    public Long fileSize;
+    @NotNull
     public String base64;
     @JsonIgnore
     private byte[] content;
@@ -28,7 +32,10 @@ public class File {
     }
 
     private void decode() {
-        content = Base64.getDecoder().decode(base64);
+        if(base64 == null || base64.length() == 0)
+            content = new byte[0];
+        else
+            content = Base64.getDecoder().decode(base64);
     }
 
     @JsonIgnore

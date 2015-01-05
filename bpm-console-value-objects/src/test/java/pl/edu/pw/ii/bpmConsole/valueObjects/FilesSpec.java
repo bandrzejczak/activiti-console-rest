@@ -62,8 +62,8 @@ public class FilesSpec {
         ZipFile zipFile = new ZipFile(file);
         File fileInsideZip = zipFile.iterator().next();
         //then
-        assertThat(fileInsideZip.filename).isEqualTo("document");
-        assertThat(fileInsideZip.filesize).isEqualTo(0);
+        assertThat(fileInsideZip.fileName).isEqualTo("document");
+        assertThat(fileInsideZip.fileSize).isEqualTo(0);
     }
 
     @Test
@@ -89,7 +89,7 @@ public class FilesSpec {
         //when
         File zippedFile = zipFile.iterator().next();
         //then
-        assertThat(zippedFile.filename).isEqualTo("stripped");
+        assertThat(zippedFile.fileName).isEqualTo("stripped");
     }
 
 }
