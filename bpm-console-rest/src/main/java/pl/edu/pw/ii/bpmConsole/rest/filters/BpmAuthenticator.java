@@ -6,18 +6,18 @@ import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.basic.BasicCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.edu.pw.ii.bpmConsole.interfaces.ProcessEngine;
+import pl.edu.pw.ii.bpmConsole.interfaces.UserService;
 
 import java.util.List;
 
 @Component
 public class BpmAuthenticator implements Authenticator<BasicCredentials, BpmUser> {
 
-    private ProcessEngine processEngine;
+    private UserService userService;
 
     @Autowired
-    public BpmAuthenticator(ProcessEngine processEngine) {
-        this.processEngine = processEngine;
+    public BpmAuthenticator(UserService userService) {
+        this.userService = userService;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class BpmAuthenticator implements Authenticator<BasicCredentials, BpmUser
     }
 
     private boolean credentialsAreValid(BasicCredentials credentials) {
-        return processEngine.checkPassword(credentials.getUsername(), credentials.getPassword());
+        return userService.checkPassword(credentials.getUsername(), credentials.getPassword());
     }
 
     private BpmUser getUserData(BasicCredentials credentials) {
@@ -36,6 +36,6 @@ public class BpmAuthenticator implements Authenticator<BasicCredentials, BpmUser
     }
 
     private List<String> getUserGroups(String username) {
-        return processEngine.getUserGroups(username);
+        return userService.getUserGroups(username);
     }
 }

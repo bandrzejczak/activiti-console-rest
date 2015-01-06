@@ -1,4 +1,4 @@
-package pl.edu.pw.ii.bpmConsole.activiti.process;
+package pl.edu.pw.ii.bpmConsole.activiti.deployment;
 
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.impl.persistence.entity.DeploymentEntity;

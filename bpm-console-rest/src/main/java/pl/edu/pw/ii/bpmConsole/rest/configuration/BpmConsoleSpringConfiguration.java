@@ -4,11 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import pl.edu.pw.ii.bpmConsole.interfaces.DeploymentService;
 import pl.edu.pw.ii.bpmConsole.interfaces.ProcessEngine;
 import pl.edu.pw.ii.bpmConsole.interfaces.ProcessEngineBuilder;
+import pl.edu.pw.ii.bpmConsole.interfaces.UserService;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.InvalidProcessEngineBuilderTypeException;
 
 import javax.sql.DataSource;
@@ -18,17 +17,22 @@ import java.sql.SQLException;
 @ComponentScan("pl.edu.pw.ii.bpmConsole.rest")
 public class BpmConsoleSpringConfiguration {
 
+    /**
+     * This is the only case of field injection in the application
+     * The reason for this is that Spring Configuration Class
+     * has to be instantiated with a no-argument constructor
+     */
     @Autowired
-    private BpmConsoleConfiguration configuration;
+    private BpmConsoleConfiguration applicationConfiguration;
 
     @Bean
     public DataSource dataSource() throws SQLException {
-        return DataSourceFactory.fromConfiguration(configuration.databaseConfiguration);
+        return DataSourceFactory.fromConfiguration(applicationConfiguration.databaseConfiguration);
     }
 
     @Bean
     public ProcessEngine processEngine() throws Exception {
-        Class bpmEngineBuilderClass = Class.forName(configuration.bpmProcessEngineBuilderClass);
+        Class bpmEngineBuilderClass = Class.forName(applicationConfiguration.bpmProcessEngineBuilderClass);
         if(!ProcessEngineBuilder.class.isAssignableFrom(bpmEngineBuilderClass))
             throw new InvalidProcessEngineBuilderTypeException();
         return constructProcessEngine(bpmEngineBuilderClass);
@@ -38,8 +42,18 @@ public class BpmConsoleSpringConfiguration {
         ProcessEngineBuilder processEngineBuilder =
                 (ProcessEngineBuilder) bpmEngineBuilderClass.newInstance();
         return processEngineBuilder
-                .usingDatabase(configuration.databaseConfiguration.type.toString(), dataSource())
+                .usingDatabase(applicationConfiguration.databaseConfiguration.type.toString(), dataSource())
                 .build();
+    }
+
+    @Bean
+    public UserService userService() throws Exception {
+        return processEngine().userService();
+    }
+
+    @Bean
+    public DeploymentService deploymentService() throws Exception {
+        return processEngine().deploymentService();
     }
 
 }

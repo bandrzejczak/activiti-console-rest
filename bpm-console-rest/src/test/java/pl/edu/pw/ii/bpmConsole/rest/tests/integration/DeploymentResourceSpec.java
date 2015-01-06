@@ -36,7 +36,7 @@ public class DeploymentResourceSpec extends BpmIntegrationTest {
                 .post(Entity.entity(singleProcess, MediaType.APPLICATION_JSON));
         //then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED_201);
-        assertThat(getProcessEngine().listDeployments()).contains(DEPLOYMENT_FILE);
+        assertThat(getProcessEngine().deploymentService().list()).contains(DEPLOYMENT_FILE);
     }
 
     @Test
@@ -52,6 +52,6 @@ public class DeploymentResourceSpec extends BpmIntegrationTest {
                 .post(Entity.entity(singleProcess, MediaType.APPLICATION_JSON));
         //then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED_201);
-        assertThat(getProcessEngine().listDeployments()).containsAll(DEPLOYMENT_ZIP_CONTENT);
+        assertThat(getProcessEngine().deploymentService().list()).containsAll(DEPLOYMENT_ZIP_CONTENT);
     }
 }

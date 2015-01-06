@@ -4,7 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.auth.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.edu.pw.ii.bpmConsole.interfaces.ProcessEngine;
+import pl.edu.pw.ii.bpmConsole.interfaces.UserService;
 import pl.edu.pw.ii.bpmConsole.rest.filters.BpmUser;
 
 import javax.ws.rs.GET;
@@ -18,14 +18,18 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class GroupsResource {
 
+    UserService userService;
+
     @Autowired
-    ProcessEngine processEngine;
+    public GroupsResource(UserService userService) {
+        this.userService = userService;
+    }
 
     @GET
     @Timed
     public Response getUserGroups(@Auth BpmUser user) {
         return Response
-                .ok(processEngine.getUserGroups(user.id))
+                .ok(userService.getUserGroups(user.id))
                 .links(LinkBuilder.fromResource(GroupsResource.class).rel("self").build())
                 .build();
     }
