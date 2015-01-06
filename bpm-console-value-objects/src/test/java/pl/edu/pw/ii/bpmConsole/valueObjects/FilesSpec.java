@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 import static pl.edu.pw.ii.bpmConsole.test.AssertJThrowableAssert.assertThrown;
 
 public class FilesSpec {
@@ -47,7 +48,7 @@ public class FilesSpec {
     public void shouldThrowExceptionIfZipFileIsNotZipped() {
         //given
         File file = new File();
-        file.base64 = CONTENT_ENCODED;
+        file.base64 = null;
         //when - then
         assertThrown(() -> new ZipFile(file))
                 .isExactlyInstanceOf(FileNotZippedException.class);
@@ -90,6 +91,21 @@ public class FilesSpec {
         File zippedFile = zipFile.iterator().next();
         //then
         assertThat(zippedFile.fileName).isEqualTo("stripped");
+    }
+
+    @Test
+    public void shouldNotUnzipTheSameArchiveTwice() {
+        //given
+        File file = spy(new File());
+        file.base64 = CONTENT_ZIPPED_1;
+        ZipFile zipFile = new ZipFile(file);
+        //when
+        zipFile.forEach(Object::toString);
+        zipFile.forEach(Object::toString);
+        //then
+        //One time for isZip method while ZipFile creation
+        //and another time for unzipping
+        verify(file, times(2)).getContent();
     }
 
 }

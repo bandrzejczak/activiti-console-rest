@@ -37,7 +37,7 @@ public class ZipFile implements Iterable<File> {
                     filesInsideZip.add(createFile(entry, zipInputStream));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnzippingException(e);
         }
     }
 

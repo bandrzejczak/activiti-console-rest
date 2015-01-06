@@ -31,7 +31,7 @@ subprojects {
     dependencies {
         compile 'com.google.guava:guava:18.0'
         testCompile 'junit:junit:4.12'
-        testCompile 'org.mockito:mockito-all:1.10.17'
+        testCompile 'org.mockito:mockito-all:1.10.8'
         testCompile 'org.assertj:assertj-core:1.7.1'
         testCompile project(':bpm-console-test')
     }
@@ -65,7 +65,14 @@ task mergeCodeCoverage(type: JacocoMerge) {
             project(":bpm-console-rest").sourceSets.test.runtimeClasspath
     destinationFile = file("$buildDir/jacoco/test.exec")
     doFirst { delete destinationFile }
-    executionData tasks.getByPath(":bpm-console-rest:test")
+    subprojects.each { sub ->
+        def testTask = tasks.getByPath(sub.name + ":test")
+        executionData testTask
+    }
+    executionData -= executionData.filter { !it.exists() }
+    executionData.forEach {
+        println it;
+    }
 }
 
 task aggregateCodeCoverage(type: JacocoReport) {

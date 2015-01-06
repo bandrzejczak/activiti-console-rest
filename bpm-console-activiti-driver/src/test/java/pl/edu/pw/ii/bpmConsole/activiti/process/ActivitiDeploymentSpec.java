@@ -5,6 +5,7 @@ import org.activiti.engine.impl.persistence.entity.DeploymentEntity;
 import org.junit.Test;
 import pl.edu.pw.ii.bpmConsole.interfaces.Deployment;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.DeploymentTooBigException;
+import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.EmptyDeploymentException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.ProcessDeploymentFailedException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.ZipFileHasNoProcessesException;
 import pl.edu.pw.ii.bpmConsole.test.Base64Resource;
@@ -119,6 +120,18 @@ public class ActivitiDeploymentSpec {
         //when - then
         assertThrown(() -> new ActivitiDeployment(repositoryServiceMock, deployment))
                 .isInstanceOf(DeploymentTooBigException.class);
+        verifyZeroInteractions(repositoryServiceMock);
+    }
+
+    @Test
+    public void shouldThrowExceptionIfTheFileIsEmpty() {
+        //given
+        File deployment = new File();
+        deployment.fileSize = (long) 0;
+        RepositoryService repositoryServiceMock = mock(RepositoryService.class);
+        //when - then
+        assertThrown(() -> new ActivitiDeployment(repositoryServiceMock, deployment))
+                .isInstanceOf(EmptyDeploymentException.class);
         verifyZeroInteractions(repositoryServiceMock);
     }
 
