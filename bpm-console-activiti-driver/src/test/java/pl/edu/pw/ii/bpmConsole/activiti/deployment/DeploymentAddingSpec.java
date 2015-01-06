@@ -3,6 +3,10 @@ package pl.edu.pw.ii.bpmConsole.activiti.deployment;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.impl.persistence.entity.DeploymentEntity;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Answers;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import pl.edu.pw.ii.bpmConsole.interfaces.Deployment;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.DeploymentTooBigException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.EmptyDeploymentException;
@@ -17,8 +21,8 @@ import java.io.IOException;
 import static org.mockito.Mockito.*;
 import static pl.edu.pw.ii.bpmConsole.test.AssertJThrowableAssert.assertThrown;
 
-public class ActivitiDeploymentSpec {
-
+@RunWith(MockitoJUnitRunner.class)
+public class DeploymentAddingSpec {
     private static final String DEPLOYMENT_INVALID_NAME = "deployment.png";
     private static final String DEPLOYMENT_VALID_NAME = "deployment.bpmn";
     private static final String TEST_ARCHIVE_NAME = "testProcesses.bar";
@@ -26,13 +30,15 @@ public class ActivitiDeploymentSpec {
     private static final byte[] DEPLOYMENT_CONTENT = new byte[0];
     private static final String NOT_DEPLOYABLE_ARCHIVE_NAME = "notDeployableArchive.zip";
 
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    RepositoryService repositoryServiceMock;
+
     @Test
     public void shouldNotDeployFileWithInvalidExtension() {
         //given
         File deployment = new File(DEPLOYMENT_CONTENT);
         deployment.fileName = DEPLOYMENT_INVALID_NAME;
         deployment.fileSize = (long) 1;
-        RepositoryService repositoryServiceMock = mock(RepositoryService.class);
         ActivitiDeployment activitiDeployment = new ActivitiDeployment(repositoryServiceMock, deployment);
         //when - then
         assertThrown(activitiDeployment::deploy)
@@ -46,7 +52,6 @@ public class ActivitiDeploymentSpec {
         File deployment = new File(DEPLOYMENT_CONTENT);
         deployment.fileName = DEPLOYMENT_VALID_NAME;
         deployment.fileSize = (long) 1;
-        RepositoryService repositoryServiceMock = mock(RepositoryService.class, RETURNS_DEEP_STUBS);
         ActivitiDeployment activitiDeployment = new ActivitiDeployment(repositoryServiceMock, deployment);
         //when
         activitiDeployment.deploy();
@@ -61,7 +66,6 @@ public class ActivitiDeploymentSpec {
         deployment.base64 = new Base64Resource(TEST_ARCHIVE_NAME).toString();
         deployment.fileName = TEST_ARCHIVE_NAME;
         deployment.fileSize = (long) 1;
-        RepositoryService repositoryServiceMock = mock(RepositoryService.class, RETURNS_DEEP_STUBS);
         when(
                 repositoryServiceMock
                         .createDeployment()
@@ -82,7 +86,6 @@ public class ActivitiDeploymentSpec {
         File deployment = new File(DEPLOYMENT_CONTENT);
         deployment.fileName = DEPLOYMENT_VALID_NAME;
         deployment.fileSize = (long) 1;
-        RepositoryService repositoryServiceMock = mock(RepositoryService.class, RETURNS_DEEP_STUBS);
         when(
                 repositoryServiceMock
                         .createDeployment()
@@ -103,7 +106,6 @@ public class ActivitiDeploymentSpec {
         deployment.base64 = new Base64Resource(NOT_DEPLOYABLE_ARCHIVE_NAME).toString();
         deployment.fileName = NOT_DEPLOYABLE_ARCHIVE_NAME;
         deployment.fileSize = (long) 1;
-        RepositoryService repositoryServiceMock = mock(RepositoryService.class);
         ActivitiDeployment activitiDeployment = new ActivitiDeployment(repositoryServiceMock, deployment);
         //when - then
         assertThrown(activitiDeployment::deploy)
@@ -116,7 +118,6 @@ public class ActivitiDeploymentSpec {
         //given
         File deployment = new File();
         deployment.fileSize = Long.valueOf(Deployment.MAX_FILE_SIZE)+1;
-        RepositoryService repositoryServiceMock = mock(RepositoryService.class);
         //when - then
         assertThrown(() -> new ActivitiDeployment(repositoryServiceMock, deployment))
                 .isInstanceOf(DeploymentTooBigException.class);
@@ -128,7 +129,6 @@ public class ActivitiDeploymentSpec {
         //given
         File deployment = new File();
         deployment.fileSize = (long) 0;
-        RepositoryService repositoryServiceMock = mock(RepositoryService.class);
         //when - then
         assertThrown(() -> new ActivitiDeployment(repositoryServiceMock, deployment))
                 .isInstanceOf(EmptyDeploymentException.class);

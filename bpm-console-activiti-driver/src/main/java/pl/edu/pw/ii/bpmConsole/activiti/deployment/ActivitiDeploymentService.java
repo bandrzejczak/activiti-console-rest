@@ -3,10 +3,10 @@ package pl.edu.pw.ii.bpmConsole.activiti.deployment;
 import org.activiti.engine.ProcessEngine;
 import pl.edu.pw.ii.bpmConsole.interfaces.Deployment;
 import pl.edu.pw.ii.bpmConsole.interfaces.DeploymentService;
+import pl.edu.pw.ii.bpmConsole.valueObjects.DeploymentInfo;
 import pl.edu.pw.ii.bpmConsole.valueObjects.File;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ActivitiDeploymentService implements DeploymentService {
 
@@ -22,7 +22,7 @@ public class ActivitiDeploymentService implements DeploymentService {
     }
 
     @Override
-    public List<String> list() {
-        return processEngine.getRepositoryService().createDeploymentQuery().list().stream().map(org.activiti.engine.repository.Deployment::getName).collect(Collectors.toList());
+    public List<DeploymentInfo> list() {
+        return new ActivitiDeployments(processEngine.getRepositoryService()).toList();
     }
 }

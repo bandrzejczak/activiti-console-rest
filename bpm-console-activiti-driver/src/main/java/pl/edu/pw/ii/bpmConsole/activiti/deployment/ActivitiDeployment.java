@@ -16,7 +16,6 @@ public class ActivitiDeployment implements Deployment {
 
     private final RepositoryService repositoryService;
     private final File deployment;
-    public static final String[] ALLOWED_EXTENSIONS = {".bpmn", ".bpmn20.xml"};
 
     public ActivitiDeployment(RepositoryService repositoryService, File deployment) {
         verifySize(deployment);
@@ -27,7 +26,7 @@ public class ActivitiDeployment implements Deployment {
     private void verifySize(File deployment) {
         if(deployment.fileSize == 0)
             throw new EmptyDeploymentException();
-        if(deployment.fileSize > Deployment.MAX_FILE_SIZE)
+        if (deployment.fileSize > MAX_FILE_SIZE)
             throw new DeploymentTooBigException();
     }
 
