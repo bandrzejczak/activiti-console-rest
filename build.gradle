@@ -14,7 +14,7 @@ buildscript {
 
 apply plugin: 'com.github.kt3k.coveralls'
 
-version = '0.0.2'
+version = '0.0.3'
 
 subprojects {
     apply plugin: 'java'
@@ -22,7 +22,7 @@ subprojects {
 
     group = 'pl.edu.pw.ii.bpmConsole'
     sourceCompatibility = 1.8
-    version = '0.0.2'
+    version = '0.0.3'
 
     repositories {
         mavenCentral()
