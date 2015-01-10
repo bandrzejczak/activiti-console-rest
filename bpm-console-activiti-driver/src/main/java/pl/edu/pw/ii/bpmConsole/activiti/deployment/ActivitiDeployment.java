@@ -49,11 +49,15 @@ public class ActivitiDeployment implements Deployment {
 
     private Optional<org.activiti.engine.repository.Deployment> deploySingleProcess(File process) {
         if (isAllowedExtension(process.fileName))
-            return Optional.ofNullable(repositoryService
-                    .createDeployment()
-                    .name(process.fileName)
-                    .addInputStream(process.fileName, new ByteArrayInputStream(process.getContent()))
-                    .deploy());
+            try {
+                return Optional.ofNullable(repositoryService
+                        .createDeployment()
+                        .name(process.fileName)
+                        .addInputStream(process.fileName, new ByteArrayInputStream(process.getContent()))
+                        .deploy());
+            } catch (Throwable e) {
+                throw new ProcessDeploymentFailedException(e);
+            }
         else
             return Optional.empty();
     }

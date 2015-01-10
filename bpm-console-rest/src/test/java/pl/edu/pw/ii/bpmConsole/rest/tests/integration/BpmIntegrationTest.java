@@ -4,7 +4,7 @@ import io.dropwizard.client.JerseyClientBuilder;
 import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.ClassRule;
 import pl.edu.pw.ii.bpmConsole.interfaces.ProcessEngine;
 import pl.edu.pw.ii.bpmConsole.rest.BpmConsoleApplication;
@@ -22,10 +22,10 @@ public class BpmIntegrationTest {
     public final static DropwizardAppRule<BpmConsoleConfiguration> DROPWIZARD_APP_RULE =
             new DropwizardAppRule<>(BpmConsoleApplication.class, CONFIGURATION_FILE);
 
-    static Client client;
+    private Client client;
 
-    @BeforeClass
-    public static void initClient(){
+    @Before
+    public void initClient() {
         JerseyClientConfiguration configuration = new JerseyClientConfiguration();
         configuration.setChunkedEncodingEnabled(false);
         client = new JerseyClientBuilder(DROPWIZARD_APP_RULE.getEnvironment())

@@ -18,11 +18,13 @@ import static pl.edu.pw.ii.bpmConsole.test.MatchesPredicate.anyMatching;
 
 public class DeploymentResourceSpec extends BpmIntegrationTest {
 
-    public static final String DEPLOYMENT_RESOURCE_PATH = "/deployment";
+    public static final String DEPLOYMENT_RESOURCE_PATH = "/deployments";
     public static final String DEPLOYMENT_FILE = "processes/deployment.bpmn";
     public static final String DEPLOYMENT_FILE_PROCESS_NAME = "deploymentTest";
     private static final String DEPLOYMENT_ZIP = "processes/processes.bar";
     private static final String[] DEPLOYMENT_ZIP_PROCESS_NAMES = {"deploymentTest1", "deploymentTest2"};
+    public static final String DEPLOYMENT_FILE2 = "processes/deploymentToDelete.bpmn";
+    private static final String DEPLOYMENT_FILE2_PROCESS_KEY = "deploymentToDelete";
 
     @Test
     public void shouldDeployValidProcess() throws IOException {
@@ -51,6 +53,23 @@ public class DeploymentResourceSpec extends BpmIntegrationTest {
                 ));
     }
 
+    @Test
+    public void shouldRemoveProcessDefinition() throws IOException {
+        //given
+        File processToDelete = new Base64Resource(DEPLOYMENT_FILE2).toFile();
+        deployProcess(processToDelete);
+        String processDefinitionId = findProcessDefinitionId(DEPLOYMENT_FILE2_PROCESS_KEY);
+        //when
+        Response response = removeProcess(processDefinitionId);
+        //then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT_204);
+        assertThat(
+                listProcesses()
+                        .stream()
+                        .noneMatch(p -> p.key.equals(DEPLOYMENT_FILE2_PROCESS_KEY))
+        ).isTrue();
+    }
+
     private Response deployProcess(File process) {
         return target(DEPLOYMENT_RESOURCE_PATH)
                 .request()
@@ -62,6 +81,21 @@ public class DeploymentResourceSpec extends BpmIntegrationTest {
                 .request()
                 .accept(MediaType.APPLICATION_JSON)
                 .get(new ListOfDeployments());
+    }
+
+    private String findProcessDefinitionId(String processDefinitionKey) {
+        return listProcesses()
+                .stream()
+                .filter(d -> d.key.equals(processDefinitionKey))
+                .findAny()
+                .get()
+                .id;
+    }
+
+    private Response removeProcess(String processDefinitionId) {
+        return target(DEPLOYMENT_RESOURCE_PATH + "/" + processDefinitionId)
+                .request()
+                .delete();
     }
 
     private class ListOfDeployments extends GenericType<List<DeploymentInfo>> {

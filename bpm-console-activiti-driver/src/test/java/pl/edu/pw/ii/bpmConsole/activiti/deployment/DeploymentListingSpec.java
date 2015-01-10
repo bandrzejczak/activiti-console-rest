@@ -64,6 +64,7 @@ public class DeploymentListingSpec {
         DeploymentInfo deployment = deployments.get(0);
         assertThat(deployment.id).isEqualTo(testProcess.getId());
         assertThat(deployment.name).isEqualTo(testProcess.getName());
+        assertThat(deployment.key).isEqualTo(testProcess.getKey());
         assertThat(deployment.version).isEqualTo(testProcess.getVersion());
         assertThat(deployment.description).isEqualTo(testProcess.getDescription());
         assertThat(deployment.active).isNotEqualTo(testProcess.isSuspended());
@@ -75,6 +76,7 @@ public class DeploymentListingSpec {
         ProcessDefinitionEntity processDefinition = new ProcessDefinitionEntity();
         processDefinition.setId("process:1:1");
         processDefinition.setVersion(1);
+        processDefinition.setKey("process");
         processDefinition.setDeploymentId("2");
         processDefinition.setDescription("Test description");
         processDefinition.setName("Process");

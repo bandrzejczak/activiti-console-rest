@@ -10,4 +10,6 @@ public interface DeploymentService {
     Deployment create(File deployment);
 
     List<DeploymentInfo> list();
+
+    void delete(String processDefinitionId);
 }
