@@ -1,6 +1,6 @@
 package pl.edu.pw.ii.bpmConsole.activiti.deployment;
 
-import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.RepositoryService;
 import pl.edu.pw.ii.bpmConsole.interfaces.Deployment;
 import pl.edu.pw.ii.bpmConsole.interfaces.DeploymentService;
 import pl.edu.pw.ii.bpmConsole.valueObjects.DeploymentInfo;
@@ -10,24 +10,24 @@ import java.util.List;
 
 public class ActivitiDeploymentService implements DeploymentService {
 
-    private final ProcessEngine processEngine;
+    private final RepositoryService repositoryService;
 
-    public ActivitiDeploymentService(ProcessEngine processEngine) {
-        this.processEngine = processEngine;
+    public ActivitiDeploymentService(RepositoryService repositoryService) {
+        this.repositoryService = repositoryService;
     }
 
     @Override
     public Deployment create(File deployment) {
-        return new ActivitiDeployment(processEngine.getRepositoryService(), deployment);
+        return new ActivitiDeployment(repositoryService, deployment);
     }
 
     @Override
     public List<DeploymentInfo> list() {
-        return new ActivitiDeployments(processEngine.getRepositoryService()).toList();
+        return new ActivitiDeployments(repositoryService).toList();
     }
 
     @Override
     public void delete(String processDefinitionId) {
-        new ActivitiDeployments(processEngine.getRepositoryService()).remove(processDefinitionId);
+        new ActivitiDeployments(repositoryService).remove(processDefinitionId);
     }
 }

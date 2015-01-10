@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import pl.edu.pw.ii.bpmConsole.interfaces.DeploymentService;
-import pl.edu.pw.ii.bpmConsole.interfaces.ProcessEngine;
-import pl.edu.pw.ii.bpmConsole.interfaces.ProcessEngineBuilder;
-import pl.edu.pw.ii.bpmConsole.interfaces.UserService;
+import pl.edu.pw.ii.bpmConsole.interfaces.*;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.InvalidProcessEngineBuilderTypeException;
 
 import javax.sql.DataSource;
@@ -54,6 +51,11 @@ public class BpmConsoleSpringConfiguration {
     @Bean
     public DeploymentService deploymentService() throws Exception {
         return processEngine().deploymentService();
+    }
+
+    @Bean
+    public TaskService taskService() throws Exception {
+        return processEngine().taskService();
     }
 
 }

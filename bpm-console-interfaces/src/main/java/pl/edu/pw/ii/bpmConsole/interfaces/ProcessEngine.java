@@ -7,4 +7,6 @@ public interface ProcessEngine {
     UserService userService();
 
     DeploymentService deploymentService();
+
+    TaskService taskService();
 }
