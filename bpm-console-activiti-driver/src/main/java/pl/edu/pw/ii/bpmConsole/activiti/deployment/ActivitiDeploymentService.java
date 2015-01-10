@@ -25,4 +25,9 @@ public class ActivitiDeploymentService implements DeploymentService {
     public List<DeploymentInfo> list() {
         return new ActivitiDeployments(processEngine.getRepositoryService()).toList();
     }
+
+    @Override
+    public void delete(String processDefinitionId) {
+        new ActivitiDeployments(processEngine.getRepositoryService()).remove(processDefinitionId);
+    }
 }

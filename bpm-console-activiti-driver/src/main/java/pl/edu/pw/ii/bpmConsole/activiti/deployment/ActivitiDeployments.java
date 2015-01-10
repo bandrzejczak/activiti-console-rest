@@ -3,12 +3,14 @@ package pl.edu.pw.ii.bpmConsole.activiti.deployment;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.apache.commons.io.IOUtils;
+import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.ProcessDefinitionDoesntExistsException;
 import pl.edu.pw.ii.bpmConsole.valueObjects.DeploymentInfo;
 
 import java.io.IOException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ActivitiDeployments {
@@ -36,6 +38,7 @@ public class ActivitiDeployments {
         deploymentInfo.id = processDefinition.getId();
         deploymentInfo.version = processDefinition.getVersion();
         deploymentInfo.name = processDefinition.getName();
+        deploymentInfo.key = processDefinition.getKey();
         deploymentInfo.description = processDefinition.getDescription();
         deploymentInfo.active = !processDefinition.isSuspended();
         deploymentInfo.deploymentTime = findDeploymentTime(processDefinition.getDeploymentId());
@@ -63,5 +66,19 @@ public class ActivitiDeployments {
         } catch (IOException e) {
             return "";
         }
+    }
+
+    public void remove(String processDefinitionId) {
+        ProcessDefinition processDefinition = findProcessDefinition(processDefinitionId)
+                .map(p -> p)
+                .orElseThrow(() -> new ProcessDefinitionDoesntExistsException(processDefinitionId));
+        repositoryService.deleteDeployment(processDefinition.getDeploymentId(), true);
+    }
+
+    private Optional<ProcessDefinition> findProcessDefinition(String processDefinitionId) {
+        return Optional.ofNullable(repositoryService
+                .createProcessDefinitionQuery()
+                .processDefinitionId(processDefinitionId)
+                .singleResult());
     }
 }

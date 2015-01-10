@@ -6,6 +6,7 @@ public class DeploymentInfo {
     public String id;
     public Integer version;
     public String name;
+    public String key;
     public String description;
     public Date deploymentTime;
     public Boolean active;
