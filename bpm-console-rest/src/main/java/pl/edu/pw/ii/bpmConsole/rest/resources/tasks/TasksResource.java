@@ -7,10 +7,7 @@ import pl.edu.pw.ii.bpmConsole.interfaces.TaskService;
 import pl.edu.pw.ii.bpmConsole.rest.filters.BpmUser;
 import pl.edu.pw.ii.bpmConsole.rest.resources.LinkBuilder;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -41,6 +38,16 @@ public class TasksResource {
     public Response awaiting(@Auth BpmUser user) {
         return Response
                 .ok(taskService.listAvailableFor(user.id, user.groups))
+                .links(LinkBuilder.fromResource(TasksResource.class).rel("self").build())
+                .build();
+    }
+
+    @GET
+    @Path("/{taskId}/claim")
+    public Response claim(@Auth BpmUser user, @PathParam("taskId") String taskId) {
+        taskService.claim(taskId, user.id, user.groups);
+        return Response
+                .noContent()
                 .links(LinkBuilder.fromResource(TasksResource.class).rel("self").build())
                 .build();
     }

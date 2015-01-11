@@ -2,13 +2,10 @@ package pl.edu.pw.ii.bpmConsole.activiti.task;
 
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.impl.TaskQueryImpl;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
-import org.activiti.engine.task.TaskInfoQuery;
-import org.activiti.engine.task.TaskQuery;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
@@ -151,10 +148,6 @@ public class TaskListingSpec {
             assertThat(returnedTask.createTime).isEqualTo(activitiTask.getCreateTime());
             assertThat(returnedTask.processName).isEqualTo(PROCESS_DEFINITION_NAME);
         }
-    }
-
-    //Mockito generics hack
-    private class TaskQueryMock extends TaskQueryImpl implements TaskInfoQuery<TaskQuery, Task> {
     }
 
 }

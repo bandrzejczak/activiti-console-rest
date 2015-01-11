@@ -9,4 +9,6 @@ public interface TaskService {
     List<TaskInfo> listAssignedTo(String userId);
 
     List<TaskInfo> listAvailableFor(String userId, List<String> userGroups);
+
+    void claim(String taskId, String userId, List<String> userGroups);
 }

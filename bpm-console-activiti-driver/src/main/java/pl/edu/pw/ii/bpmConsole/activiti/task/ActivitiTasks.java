@@ -3,6 +3,8 @@ package pl.edu.pw.ii.bpmConsole.activiti.task;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
+import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.ClaimForbiddenException;
+import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.NoSuchTaskException;
 import pl.edu.pw.ii.bpmConsole.valueObjects.TaskInfo;
 
 import java.util.List;
@@ -65,4 +67,31 @@ public class ActivitiTasks {
                 .singleResult()
                 .getName();
     }
+
+    public void claim(String taskId, String userId, List<String> userGroups) {
+        verifyClaim(taskId, userId, userGroups);
+        taskService.claim(taskId, userId);
+    }
+
+    private void verifyClaim(String taskId, String userId, List<String> userGroups) {
+        if (!taskExists(taskId))
+            throw new NoSuchTaskException(taskId);
+        if (!canClaim(taskId, userId, userGroups))
+            throw new ClaimForbiddenException(taskId);
+    }
+
+    private Boolean canClaim(String taskId, String userId, List<String> userGroups) {
+        return listAvailableFor(userId, userGroups)
+                .stream()
+                .anyMatch(t -> t.id.equals(taskId));
+    }
+
+    private Boolean taskExists(String taskId) {
+        return taskService
+                .createTaskQuery()
+                .active()
+                .taskId(taskId)
+                .singleResult() != null;
+    }
+
 }

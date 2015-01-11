@@ -25,4 +25,9 @@ public class ActivitiTaskService implements TaskService {
     public List<TaskInfo> listAvailableFor(String userId, List<String> userGroups) {
         return new ActivitiTasks(taskService, repositoryService).listAvailableFor(userId, userGroups);
     }
+
+    @Override
+    public void claim(String taskId, String userId, List<String> userGroups) {
+        new ActivitiTasks(taskService, repositoryService).claim(taskId, userId, userGroups);
+    }
 }
