@@ -8,6 +8,7 @@ import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.NoSuchTaskException;
 import pl.edu.pw.ii.bpmConsole.valueObjects.TaskInfo;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ActivitiTasks {
@@ -49,7 +50,7 @@ public class ActivitiTasks {
                 .collect(Collectors.toList());
     }
 
-    private TaskInfo mapTask(Task task) {
+    TaskInfo mapTask(Task task) {
         TaskInfo taskInfo = new TaskInfo();
         taskInfo.id = task.getId();
         taskInfo.name = task.getName();
@@ -87,11 +88,13 @@ public class ActivitiTasks {
     }
 
     private Boolean taskExists(String taskId) {
-        return taskService
+        return Optional.ofNullable(
+                taskService
                 .createTaskQuery()
                 .active()
                 .taskId(taskId)
-                .singleResult() != null;
+                        .singleResult()
+        ).isPresent();
     }
 
 }

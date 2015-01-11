@@ -42,12 +42,21 @@ public class TasksResource {
                 .build();
     }
 
-    @GET
+    @POST
     @Path("/{taskId}/claim")
     public Response claim(@Auth BpmUser user, @PathParam("taskId") String taskId) {
         taskService.claim(taskId, user.id, user.groups);
         return Response
                 .noContent()
+                .links(LinkBuilder.fromResource(TasksResource.class).rel("self").build())
+                .build();
+    }
+
+    @GET
+    @Path("/{taskId}/form")
+    public Response form(@Auth BpmUser user, @PathParam("taskId") String taskId) {
+        return Response
+                .ok(taskService.findFormForTask(taskId))
                 .links(LinkBuilder.fromResource(TasksResource.class).rel("self").build())
                 .build();
     }

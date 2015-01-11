@@ -1,48 +1,20 @@
 package pl.edu.pw.ii.bpmConsole.activiti.task;
 
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.TaskService;
-import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
-import org.activiti.engine.task.Task;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Answers;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.ClaimForbiddenException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.NoSuchTaskException;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static pl.edu.pw.ii.bpmConsole.test.AssertJThrowableAssert.assertThrown;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TaskClaimingSpec {
-
-    public static final String TASK_ID = "1";
-    public static final String USER_ID = "user";
-    private static final List<String> USER_GROUPS = Arrays.asList("group1", "group2");
-    public static final String PROCESS_DEFINITION_ID = "1";
-    private static final String PROCESS_DEFINITION_NAME = "name";
-
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    private TaskService taskServiceMock;
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    private RepositoryService repositoryServiceMock;
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    private TaskQueryMock taskQueryMock;
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    TaskQueryMock taskQueryMock1;
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    TaskQueryMock taskQueryMock2;
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    TaskQueryMock taskQueryMock3;
+public class TaskClaimingSpec extends AbstractTaskSpec {
 
     @Test
     public void shouldThrowExceptionIfTaskDoesntExist() {
@@ -82,29 +54,4 @@ public class TaskClaimingSpec {
         ).claim(TASK_ID, USER_ID);
     }
 
-    private void whenLookingForProcessDefinitonNameReturn(String name) {
-        ProcessDefinitionEntity processDefinition = new ProcessDefinitionEntity();
-        processDefinition.setName(name);
-        when(
-                repositoryServiceMock
-                        .createProcessDefinitionQuery()
-                        .processDefinitionId(eq(PROCESS_DEFINITION_ID))
-                        .singleResult()
-        ).thenReturn(processDefinition);
-    }
-
-    private void whenLookingForTaskReturn(Task task) {
-        when(
-                taskQueryMock
-                        .taskId(TASK_ID)
-                        .singleResult()
-        ).thenReturn(task);
-    }
-
-    private void whenLookingForTaskToAssignReturn(List<Task> tasks) {
-        when(taskQueryMock.or()).thenReturn(taskQueryMock1);
-        when(taskQueryMock1.taskCandidateUser(USER_ID)).thenReturn(taskQueryMock2);
-        when(taskQueryMock2.taskCandidateGroupIn(USER_GROUPS)).thenReturn(taskQueryMock3);
-        when(taskQueryMock3.endOr().list()).thenReturn(tasks);
-    }
 }

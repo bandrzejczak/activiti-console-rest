@@ -1,33 +1,37 @@
 package pl.edu.pw.ii.bpmConsole.activiti.task;
 
-import org.activiti.engine.RepositoryService;
+import org.activiti.engine.ProcessEngine;
 import pl.edu.pw.ii.bpmConsole.interfaces.TaskService;
+import pl.edu.pw.ii.bpmConsole.valueObjects.FormInfo;
 import pl.edu.pw.ii.bpmConsole.valueObjects.TaskInfo;
 
 import java.util.List;
 
 public class ActivitiTaskService implements TaskService {
 
-    private final org.activiti.engine.TaskService taskService;
-    private final RepositoryService repositoryService;
+    private final ProcessEngine processEngine;
 
-    public ActivitiTaskService(org.activiti.engine.TaskService taskService, RepositoryService repositoryService) {
-        this.taskService = taskService;
-        this.repositoryService = repositoryService;
+    public ActivitiTaskService(ProcessEngine processEngine) {
+        this.processEngine = processEngine;
     }
 
     @Override
     public List<TaskInfo> listAssignedTo(String userId) {
-        return new ActivitiTasks(taskService, repositoryService).listAssignedTo(userId);
+        return new ActivitiTasks(processEngine.getTaskService(), processEngine.getRepositoryService()).listAssignedTo(userId);
     }
 
     @Override
     public List<TaskInfo> listAvailableFor(String userId, List<String> userGroups) {
-        return new ActivitiTasks(taskService, repositoryService).listAvailableFor(userId, userGroups);
+        return new ActivitiTasks(processEngine.getTaskService(), processEngine.getRepositoryService()).listAvailableFor(userId, userGroups);
     }
 
     @Override
     public void claim(String taskId, String userId, List<String> userGroups) {
-        new ActivitiTasks(taskService, repositoryService).claim(taskId, userId, userGroups);
+        new ActivitiTasks(processEngine.getTaskService(), processEngine.getRepositoryService()).claim(taskId, userId, userGroups);
+    }
+
+    @Override
+    public FormInfo findFormForTask(String taskId) {
+        return new ActivitiForm(processEngine).findFormForTask(taskId);
     }
 }

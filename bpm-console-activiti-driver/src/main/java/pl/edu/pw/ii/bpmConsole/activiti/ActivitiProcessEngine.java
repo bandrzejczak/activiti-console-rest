@@ -59,6 +59,6 @@ public class ActivitiProcessEngine implements ProcessEngine {
 
     @Override
     public TaskService taskService() {
-        return new ActivitiTaskService(processEngine.getTaskService(), processEngine.getRepositoryService());
+        return new ActivitiTaskService(processEngine);
     }
 }
