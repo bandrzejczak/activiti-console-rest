@@ -28,9 +28,19 @@ public class TasksResource {
     }
 
     @GET
+    @Path("/inbox")
     public Response inbox(@Auth BpmUser user) {
         return Response
-                .ok(taskService.list(user.id))
+                .ok(taskService.listAssignedTo(user.id))
+                .links(LinkBuilder.fromResource(TasksResource.class).rel("self").build())
+                .build();
+    }
+
+    @GET
+    @Path("/awaiting")
+    public Response awaiting(@Auth BpmUser user) {
+        return Response
+                .ok(taskService.listAvailableFor(user.id, user.groups))
                 .links(LinkBuilder.fromResource(TasksResource.class).rel("self").build())
                 .build();
     }

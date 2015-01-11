@@ -17,7 +17,12 @@ public class ActivitiTaskService implements TaskService {
     }
 
     @Override
-    public List<TaskInfo> list(String userId) {
+    public List<TaskInfo> listAssignedTo(String userId) {
         return new ActivitiTasks(taskService, repositoryService).listAssignedTo(userId);
+    }
+
+    @Override
+    public List<TaskInfo> listAvailableFor(String userId, List<String> userGroups) {
+        return new ActivitiTasks(taskService, repositoryService).listAvailableFor(userId, userGroups);
     }
 }

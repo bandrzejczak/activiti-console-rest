@@ -18,11 +18,30 @@ public class ActivitiTasks {
     }
 
     public List<TaskInfo> listAssignedTo(String userId) {
-        return taskService
-                .createTaskQuery()
-                .active()
-                .taskAssignee(userId)
-                .list()
+        return mapTasks(
+                taskService
+                        .createTaskQuery()
+                        .active()
+                        .taskAssignee(userId)
+                        .list()
+        );
+    }
+
+    public List<TaskInfo> listAvailableFor(String userId, List<String> userGroups) {
+        return mapTasks(
+                taskService
+                        .createTaskQuery()
+                        .active()
+                        .or()
+                        .taskCandidateUser(userId)
+                        .taskCandidateGroupIn(userGroups)
+                        .endOr()
+                        .list()
+        );
+    }
+
+    private List<TaskInfo> mapTasks(List<Task> tasks) {
+        return tasks
                 .stream()
                 .map(this::mapTask)
                 .collect(Collectors.toList());

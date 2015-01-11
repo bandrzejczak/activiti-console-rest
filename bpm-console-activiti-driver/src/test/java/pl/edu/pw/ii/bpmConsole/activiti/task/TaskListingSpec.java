@@ -16,10 +16,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import pl.edu.pw.ii.bpmConsole.valueObjects.TaskInfo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.eq;
@@ -32,12 +29,19 @@ public class TaskListingSpec {
     public static final String USER_ID = "login";
     public static final String PROCESS_DEFINITION_NAME = "name";
     public static final String PROCESS_DEFINITION_ID = "3";
+    private static final List<String> USER_GROUPS = Arrays.asList("group1", "group2");
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     TaskService taskServiceMock;
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    TaskQueryMock taskQuery;
+    TaskQueryMock taskQueryMock;
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    TaskQueryMock taskQueryMock1;
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    TaskQueryMock taskQueryMock2;
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    TaskQueryMock taskQueryMock3;
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     RepositoryService repositoryServiceMock;
@@ -49,9 +53,9 @@ public class TaskListingSpec {
                 taskServiceMock
                         .createTaskQuery()
                         .active()
-        ).thenReturn(taskQuery);
+        ).thenReturn(taskQueryMock);
         when(
-                taskQuery
+                taskQueryMock
                         .taskAssignee(USER_ID)
                         .list()
         ).thenReturn(Collections.emptyList());
@@ -69,10 +73,10 @@ public class TaskListingSpec {
                 taskServiceMock
                         .createTaskQuery()
                         .active()
-        ).thenReturn(taskQuery);
+        ).thenReturn(taskQueryMock);
         List<Task> activitiTasks = prepareTasksList();
         when(
-                taskQuery
+                taskQueryMock
                         .taskAssignee(USER_ID)
                         .list()
         ).thenReturn(activitiTasks);
@@ -84,6 +88,28 @@ public class TaskListingSpec {
         ).thenReturn(prepareProcessDefinition(PROCESS_DEFINITION_NAME));
         //when
         List<TaskInfo> returnedTasks = new ActivitiTasks(taskServiceMock, repositoryServiceMock).listAssignedTo(USER_ID);
+        //then
+        assertThat(returnedTasks).hasSize(2);
+        assertThatReturnedTaskHasActivitiTaskData(returnedTasks, activitiTasks);
+    }
+
+    @Test
+    public void shouldReturnListOfTasksAvailableToAGivenUserWithUserGroups() {
+        //given
+        when(taskServiceMock.createTaskQuery().active()).thenReturn(taskQueryMock);
+        List<Task> activitiTasks = prepareTasksList();
+        when(taskQueryMock.or()).thenReturn(taskQueryMock1);
+        when(taskQueryMock1.taskCandidateUser(USER_ID)).thenReturn(taskQueryMock2);
+        when(taskQueryMock2.taskCandidateGroupIn(USER_GROUPS)).thenReturn(taskQueryMock3);
+        when(taskQueryMock3.endOr().list()).thenReturn(activitiTasks);
+        when(
+                repositoryServiceMock
+                        .createProcessDefinitionQuery()
+                        .processDefinitionId(eq(PROCESS_DEFINITION_ID))
+                        .singleResult()
+        ).thenReturn(prepareProcessDefinition(PROCESS_DEFINITION_NAME));
+        //when
+        List<TaskInfo> returnedTasks = new ActivitiTasks(taskServiceMock, repositoryServiceMock).listAvailableFor(USER_ID, USER_GROUPS);
         //then
         assertThat(returnedTasks).hasSize(2);
         assertThatReturnedTaskHasActivitiTaskData(returnedTasks, activitiTasks);

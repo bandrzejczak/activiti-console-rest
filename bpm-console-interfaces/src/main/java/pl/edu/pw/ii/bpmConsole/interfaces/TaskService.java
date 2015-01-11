@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface TaskService {
 
-    List<TaskInfo> list(String userId);
+    List<TaskInfo> listAssignedTo(String userId);
 
+    List<TaskInfo> listAvailableFor(String userId, List<String> userGroups);
 }
