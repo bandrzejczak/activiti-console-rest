@@ -6,5 +6,6 @@ import java.util.List;
 public class FormInfo {
     public TaskInfo task;
     public String description;
+    public Rights rights;
     public List<FieldInfo> fields = new ArrayList<>();
 }

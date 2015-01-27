@@ -1,6 +1,7 @@
 package pl.edu.pw.ii.bpmConsole.interfaces;
 
 import pl.edu.pw.ii.bpmConsole.valueObjects.FormInfo;
+import pl.edu.pw.ii.bpmConsole.valueObjects.Rights;
 import pl.edu.pw.ii.bpmConsole.valueObjects.TaskInfo;
 
 import java.util.List;
@@ -13,5 +14,5 @@ public interface TaskService {
 
     void claim(String taskId, String userId, List<String> userGroups);
 
-    FormInfo findFormForTask(String taskId);
+    FormInfo findFormForTask(String taskId, Rights rightsToTask);
 }

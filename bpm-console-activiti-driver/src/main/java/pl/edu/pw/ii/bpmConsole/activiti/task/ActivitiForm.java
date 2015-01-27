@@ -7,10 +7,12 @@ import org.activiti.engine.form.TaskFormData;
 import org.activiti.engine.impl.form.DateFormType;
 import org.activiti.engine.impl.form.EnumFormType;
 import org.activiti.engine.task.Task;
+import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.AccessDeniedException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.DateParsingException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.NoSuchTaskException;
 import pl.edu.pw.ii.bpmConsole.valueObjects.FieldInfo;
 import pl.edu.pw.ii.bpmConsole.valueObjects.FormInfo;
+import pl.edu.pw.ii.bpmConsole.valueObjects.Rights;
 import pl.edu.pw.ii.bpmConsole.valueObjects.TaskInfo;
 
 import java.text.ParseException;
@@ -28,12 +30,15 @@ public class ActivitiForm {
         this.processEngine = processEngine;
     }
 
-    public FormInfo findFormForTask(String taskId) {
+    public FormInfo findFormForTask(String taskId, Rights rightsToTask) {
         TaskFormData taskForm = getFormData(taskId).orElseThrow(() -> new NoSuchTaskException(taskId));
+        if (!rightsToTask.canRead())
+            throw new AccessDeniedException(taskId);
         FormInfo formInfo = new FormInfo();
         formInfo.task = mapTask(taskForm.getTask());
         formInfo.description = taskForm.getTask().getDescription();
         formInfo.fields = mapFields(taskForm.getFormProperties());
+        formInfo.rights = rightsToTask;
         return formInfo;
     }
 

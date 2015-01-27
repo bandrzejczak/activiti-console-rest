@@ -3,6 +3,7 @@ package pl.edu.pw.ii.bpmConsole.activiti.task;
 import org.activiti.engine.ProcessEngine;
 import pl.edu.pw.ii.bpmConsole.interfaces.TaskService;
 import pl.edu.pw.ii.bpmConsole.valueObjects.FormInfo;
+import pl.edu.pw.ii.bpmConsole.valueObjects.Rights;
 import pl.edu.pw.ii.bpmConsole.valueObjects.TaskInfo;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class ActivitiTaskService implements TaskService {
     }
 
     @Override
-    public FormInfo findFormForTask(String taskId) {
-        return new ActivitiForm(processEngine).findFormForTask(taskId);
+    public FormInfo findFormForTask(String taskId, Rights rightsToTask) {
+        return new ActivitiForm(processEngine).findFormForTask(taskId, rightsToTask);
     }
 }

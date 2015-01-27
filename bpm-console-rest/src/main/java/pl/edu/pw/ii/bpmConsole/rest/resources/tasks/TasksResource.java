@@ -4,8 +4,10 @@ import io.dropwizard.auth.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.edu.pw.ii.bpmConsole.interfaces.TaskService;
+import pl.edu.pw.ii.bpmConsole.interfaces.UserService;
 import pl.edu.pw.ii.bpmConsole.rest.filters.BpmUser;
 import pl.edu.pw.ii.bpmConsole.rest.resources.LinkBuilder;
+import pl.edu.pw.ii.bpmConsole.valueObjects.Rights;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -18,10 +20,12 @@ import javax.ws.rs.core.Response;
 public class TasksResource {
 
     private final TaskService taskService;
+    private final UserService userService;
 
     @Autowired
-    public TasksResource(TaskService taskService) {
+    public TasksResource(TaskService taskService, UserService userService) {
         this.taskService = taskService;
+        this.userService = userService;
     }
 
     @GET
@@ -55,8 +59,9 @@ public class TasksResource {
     @GET
     @Path("/{taskId}/form")
     public Response form(@Auth BpmUser user, @PathParam("taskId") String taskId) {
+        Rights rightsToTask = userService.verifyRights(user.id, user.groups).toTask(taskId);
         return Response
-                .ok(taskService.findFormForTask(taskId))
+                .ok(taskService.findFormForTask(taskId, rightsToTask))
                 .links(LinkBuilder.fromResource(TasksResource.class).rel("self").build())
                 .build();
     }

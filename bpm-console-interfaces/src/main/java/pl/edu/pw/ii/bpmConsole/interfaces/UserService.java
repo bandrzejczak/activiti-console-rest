@@ -14,4 +14,5 @@ public interface UserService {
 
     void createMembership(String login, String groupName);
 
+    UserRights verifyRights(String id, List<String> groups);
 }

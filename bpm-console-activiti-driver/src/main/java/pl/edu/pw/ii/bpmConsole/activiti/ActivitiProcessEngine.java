@@ -49,7 +49,7 @@ public class ActivitiProcessEngine implements ProcessEngine {
 
     @Override
     public UserService userService() {
-        return new ActivitiUserService(processEngine.getIdentityService());
+        return new ActivitiUserService(processEngine);
     }
 
     @Override

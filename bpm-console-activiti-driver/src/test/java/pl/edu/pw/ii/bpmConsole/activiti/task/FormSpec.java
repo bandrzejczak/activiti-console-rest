@@ -12,6 +12,7 @@ import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.DateParsingException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.NoSuchTaskException;
 import pl.edu.pw.ii.bpmConsole.valueObjects.FieldInfo;
 import pl.edu.pw.ii.bpmConsole.valueObjects.FormInfo;
+import pl.edu.pw.ii.bpmConsole.valueObjects.Rights;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,7 +35,7 @@ public class FormSpec extends AbstractTaskSpec {
         //given
         when(formServiceMock.getTaskFormData(TASK_ID)).thenReturn(null);
         //when - then
-        assertThrown(() -> new ActivitiForm(processEngineMock).findFormForTask(TASK_ID))
+        assertThrown(() -> new ActivitiForm(processEngineMock).findFormForTask(TASK_ID, Rights.CLAIM))
                 .isInstanceOf(NoSuchTaskException.class);
     }
 
@@ -47,7 +48,7 @@ public class FormSpec extends AbstractTaskSpec {
         when(formServiceMock.getTaskFormData(TASK_ID)).thenReturn(taskForm);
         whenLookingForProcessDefinitonNameReturn(PROCESS_DEFINITION_NAME);
         //when
-        FormInfo formInfo = new ActivitiForm(processEngineMock).findFormForTask(TASK_ID);
+        FormInfo formInfo = new ActivitiForm(processEngineMock).findFormForTask(TASK_ID, Rights.CLAIM);
         //then
         assertThat(formInfo.fields).isEmpty();
     }
@@ -59,7 +60,7 @@ public class FormSpec extends AbstractTaskSpec {
         when(formServiceMock.getTaskFormData(TASK_ID)).thenReturn(testFormData);
         whenLookingForProcessDefinitonNameReturn(PROCESS_DEFINITION_NAME);
         //when
-        FormInfo formInfo = new ActivitiForm(processEngineMock).findFormForTask(TASK_ID);
+        FormInfo formInfo = new ActivitiForm(processEngineMock).findFormForTask(TASK_ID, Rights.CLAIM);
         //then
         assertThat(formInfo.description).isEqualTo(TASK_DESCRIPTION);
         assertThat(formInfo.fields).hasSameSizeAs(testFormData.getFormProperties());
@@ -73,7 +74,7 @@ public class FormSpec extends AbstractTaskSpec {
         when(formServiceMock.getTaskFormData(TASK_ID)).thenReturn(testFormData);
         whenLookingForProcessDefinitonNameReturn(PROCESS_DEFINITION_NAME);
         //when - then
-        assertThrown(() -> new ActivitiForm(processEngineMock).findFormForTask(TASK_ID))
+        assertThrown(() -> new ActivitiForm(processEngineMock).findFormForTask(TASK_ID, Rights.CLAIM))
                 .isInstanceOf(DateParsingException.class);
     }
 

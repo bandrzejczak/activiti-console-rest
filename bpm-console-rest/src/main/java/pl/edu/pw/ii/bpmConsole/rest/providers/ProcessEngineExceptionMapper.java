@@ -23,7 +23,7 @@ public class ProcessEngineExceptionMapper implements ExceptionMapper<ProcessEngi
     class ProcessEngineErrorMessage extends ErrorMessage{
         public final String errorClass;
         public ProcessEngineErrorMessage(ProcessEngineException exception) {
-            super(exception.getMessage());
+            super(exception.code, exception.getMessage());
             errorClass = exception.getClass().getSimpleName();
         }
     }
