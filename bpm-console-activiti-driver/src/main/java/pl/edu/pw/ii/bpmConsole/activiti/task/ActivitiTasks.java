@@ -89,11 +89,11 @@ public class ActivitiTasks {
         processEngine.getTaskService().unclaim(taskId);
     }
 
-    private Rights getRightsToTask(String taskId, String userId, List<String> userGroups) {
+    public Rights getRightsToTask(String taskId, String userId, List<String> userGroups) {
         return new ActivitiUserRights(processEngine, userId, userGroups).toTask(taskId);
     }
 
-    private void verifyTaskExists(String taskId) {
+    public void verifyTaskExists(String taskId) {
         if (!taskExists(taskId))
             throw new NoSuchTaskException(taskId);
     }

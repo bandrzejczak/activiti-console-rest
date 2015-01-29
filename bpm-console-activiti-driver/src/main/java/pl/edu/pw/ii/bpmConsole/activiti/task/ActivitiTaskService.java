@@ -7,6 +7,7 @@ import pl.edu.pw.ii.bpmConsole.valueObjects.Rights;
 import pl.edu.pw.ii.bpmConsole.valueObjects.TaskInfo;
 
 import java.util.List;
+import java.util.Map;
 
 public class ActivitiTaskService implements TaskService {
 
@@ -34,6 +35,11 @@ public class ActivitiTaskService implements TaskService {
     @Override
     public void unclaim(String taskId, String userId, List<String> userGroups) {
         new ActivitiTasks(processEngine).unclaim(taskId, userId, userGroups);
+    }
+
+    @Override
+    public void submit(String taskId, String userId, Map<String, String> properties) {
+        new ActivitiForm(processEngine).submit(taskId, userId, properties);
     }
 
     @Override

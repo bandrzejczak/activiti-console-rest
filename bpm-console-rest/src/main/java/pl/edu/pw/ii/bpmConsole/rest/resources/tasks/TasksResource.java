@@ -71,7 +71,7 @@ public class TasksResource {
     @POST
     @Path("/{taskId}/submit")
     public Response submit(@Auth BpmUser user, @PathParam("taskId") String taskId, @RequestBody Map<String, String> properties) {
-//        taskService.claim(taskId, user.id, user.groups);
+        taskService.submit(taskId, user.id, properties);
         return Response
                 .ok()
                 .links(LinkBuilder.fromResource(TasksResource.class).rel("self").build())
