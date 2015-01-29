@@ -9,4 +9,6 @@ public interface ProcessEngine {
     DeploymentService deploymentService();
 
     TaskService taskService();
+
+    ProcessService processService();
 }

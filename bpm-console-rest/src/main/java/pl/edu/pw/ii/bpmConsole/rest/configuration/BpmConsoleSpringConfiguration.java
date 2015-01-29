@@ -58,4 +58,9 @@ public class BpmConsoleSpringConfiguration {
         return processEngine().taskService();
     }
 
+    @Bean
+    public ProcessService processService() throws Exception {
+        return processEngine().processService();
+    }
+
 }
