@@ -119,6 +119,8 @@ public class ActivitiForm {
                         Collectors.toMap(
                                 Map.Entry::getKey,
                                 p -> {
+                                    if (p.getValue() == null)
+                                        return "";
                                     if (formProperties.get(p.getKey()).getType() instanceof DateFormType)
                                         return parseDate(p.getValue(), getDatePattern(formProperties.get(p.getKey())));
                                     else
