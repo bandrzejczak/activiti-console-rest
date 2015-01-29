@@ -7,10 +7,7 @@ import pl.edu.pw.ii.bpmConsole.interfaces.ProcessService;
 import pl.edu.pw.ii.bpmConsole.rest.filters.BpmUser;
 import pl.edu.pw.ii.bpmConsole.rest.resources.LinkBuilder;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -32,6 +29,16 @@ public class ProcessResource {
     public Response list(@Auth BpmUser user) {
         return Response
                 .ok(processService.listStartableProcesses(user.id, user.groups))
+                .links(LinkBuilder.fromResource(ProcessResource.class).rel("self").build())
+                .build();
+    }
+
+    @POST
+    @Path("/{id}/start")
+    public Response start(@Auth BpmUser user, @PathParam("id") String processDefinitionId) {
+        processService.startProcess(processDefinitionId, user.id, user.groups);
+        return Response
+                .noContent()
                 .links(LinkBuilder.fromResource(ProcessResource.class).rel("self").build())
                 .build();
     }

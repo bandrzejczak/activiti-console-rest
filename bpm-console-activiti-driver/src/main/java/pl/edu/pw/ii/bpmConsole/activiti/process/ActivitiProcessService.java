@@ -1,10 +1,12 @@
 package pl.edu.pw.ii.bpmConsole.activiti.process;
 
-import org.activiti.engine.RepositoryService;
+import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.IdentityLinkType;
 import pl.edu.pw.ii.bpmConsole.interfaces.ProcessService;
+import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.NoSuchProcessException;
+import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.ProcessStartForbiddenException;
 import pl.edu.pw.ii.bpmConsole.valueObjects.ProcessDefinitionInfo;
 
 import java.util.Collection;
@@ -13,15 +15,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ActivitiProcessService implements ProcessService {
-    private final RepositoryService repositoryService;
+    private final ProcessEngine processEngine;
 
-    public ActivitiProcessService(RepositoryService repositoryService) {
-        this.repositoryService = repositoryService;
+    public ActivitiProcessService(ProcessEngine processEngine) {
+        this.processEngine = processEngine;
     }
 
     @Override
     public Collection<ProcessDefinitionInfo> listStartableProcesses(String userId, List<String> groups) {
-        return repositoryService
+        return processEngine
+                .getRepositoryService()
                 .createProcessDefinitionQuery()
                 .active()
                 .latestVersion()
@@ -32,8 +35,17 @@ public class ActivitiProcessService implements ProcessService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void startProcess(String processDefinitionId, String userId, List<String> groups) {
+        verifyProcessDefinitionExists(processDefinitionId);
+        if (!isStartableByUser(processDefinitionId, userId, groups))
+            throw new ProcessStartForbiddenException(processDefinitionId);
+        processEngine.getIdentityService().setAuthenticatedUserId(userId);
+        processEngine.getRuntimeService().startProcessInstanceById(processDefinitionId);
+    }
+
     private Boolean isStartableByUser(String processDefinitionId, String userId, List<String> groups) {
-        List<IdentityLink> identityLinks = repositoryService
+        List<IdentityLink> identityLinks = processEngine.getRepositoryService()
                 .getIdentityLinksForProcessDefinition(processDefinitionId);
         return identityLinks.isEmpty() ||
                 identityLinks
@@ -52,10 +64,21 @@ public class ActivitiProcessService implements ProcessService {
     }
 
     private Date getDeploymentTime(String deploymentId) {
-        return repositoryService
+        return processEngine
+                .getRepositoryService()
                 .createDeploymentQuery()
                 .deploymentId(deploymentId)
                 .singleResult()
                 .getDeploymentTime();
+    }
+
+    private void verifyProcessDefinitionExists(String processDefinitionId) {
+        if (processEngine
+                .getRepositoryService()
+                .createProcessDefinitionQuery()
+                .active()
+                .processDefinitionId(processDefinitionId)
+                .singleResult() == null)
+            throw new NoSuchProcessException(processDefinitionId);
     }
 }

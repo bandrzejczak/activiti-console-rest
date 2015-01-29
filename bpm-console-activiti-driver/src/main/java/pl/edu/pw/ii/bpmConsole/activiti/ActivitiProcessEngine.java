@@ -62,6 +62,6 @@ public class ActivitiProcessEngine implements ProcessEngine {
 
     @Override
     public ProcessService processService() {
-        return new ActivitiProcessService(processEngine.getRepositoryService());
+        return new ActivitiProcessService(processEngine);
     }
 }

@@ -9,4 +9,5 @@ public interface ProcessService {
 
     Collection<ProcessDefinitionInfo> listStartableProcesses(String userId, List<String> groups);
 
+    void startProcess(String processDefinitionId, String userId, List<String> groups);
 }
