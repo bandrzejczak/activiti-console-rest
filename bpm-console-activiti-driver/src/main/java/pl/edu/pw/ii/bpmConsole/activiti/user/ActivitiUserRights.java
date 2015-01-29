@@ -55,6 +55,7 @@ public class ActivitiUserRights implements UserRights {
                 processEngine
                         .getTaskService()
                         .createTaskQuery()
+                        .active()
                         .taskId(taskId)
                         .singleResult()
         );

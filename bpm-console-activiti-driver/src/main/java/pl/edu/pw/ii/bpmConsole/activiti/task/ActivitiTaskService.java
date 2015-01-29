@@ -18,17 +18,22 @@ public class ActivitiTaskService implements TaskService {
 
     @Override
     public List<TaskInfo> listAssignedTo(String userId) {
-        return new ActivitiTasks(processEngine.getTaskService(), processEngine.getRepositoryService()).listAssignedTo(userId);
+        return new ActivitiTasks(processEngine).listAssignedTo(userId);
     }
 
     @Override
     public List<TaskInfo> listAvailableFor(String userId, List<String> userGroups) {
-        return new ActivitiTasks(processEngine.getTaskService(), processEngine.getRepositoryService()).listAvailableFor(userId, userGroups);
+        return new ActivitiTasks(processEngine).listAvailableFor(userId, userGroups);
     }
 
     @Override
     public void claim(String taskId, String userId, List<String> userGroups) {
-        new ActivitiTasks(processEngine.getTaskService(), processEngine.getRepositoryService()).claim(taskId, userId, userGroups);
+        new ActivitiTasks(processEngine).claim(taskId, userId, userGroups);
+    }
+
+    @Override
+    public void unclaim(String taskId, String userId, List<String> userGroups) {
+        new ActivitiTasks(processEngine).unclaim(taskId, userId, userGroups);
     }
 
     @Override

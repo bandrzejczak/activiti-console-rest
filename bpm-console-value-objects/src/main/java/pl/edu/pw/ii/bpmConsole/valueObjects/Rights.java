@@ -34,4 +34,9 @@ public enum Rights {
     public Boolean canUnclaim() {
         return unclaim;
     }
+
+    @JsonProperty("claim")
+    public Boolean canClaim() {
+        return read && !write;
+    }
 }

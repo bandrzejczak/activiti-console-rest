@@ -1,10 +1,12 @@
 package pl.edu.pw.ii.bpmConsole.activiti.task;
 
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.TaskService;
+import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.task.Task;
+import pl.edu.pw.ii.bpmConsole.activiti.user.ActivitiUserRights;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.ClaimForbiddenException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.NoSuchTaskException;
+import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.UnclaimForbiddenException;
+import pl.edu.pw.ii.bpmConsole.valueObjects.Rights;
 import pl.edu.pw.ii.bpmConsole.valueObjects.TaskInfo;
 
 import java.util.List;
@@ -12,17 +14,17 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ActivitiTasks {
-    private final TaskService taskService;
-    private final RepositoryService repositoryService;
 
-    public ActivitiTasks(TaskService taskService, RepositoryService repositoryService) {
-        this.taskService = taskService;
-        this.repositoryService = repositoryService;
+    private final ProcessEngine processEngine;
+
+    public ActivitiTasks(ProcessEngine processEngine) {
+        this.processEngine = processEngine;
     }
 
     public List<TaskInfo> listAssignedTo(String userId) {
         return mapTasks(
-                taskService
+                processEngine
+                        .getTaskService()
                         .createTaskQuery()
                         .active()
                         .taskAssignee(userId)
@@ -32,7 +34,8 @@ public class ActivitiTasks {
 
     public List<TaskInfo> listAvailableFor(String userId, List<String> userGroups) {
         return mapTasks(
-                taskService
+                processEngine
+                        .getTaskService()
                         .createTaskQuery()
                         .active()
                         .or()
@@ -62,7 +65,8 @@ public class ActivitiTasks {
     }
 
     private String findProcessName(String processDefinitionId) {
-        return repositoryService
+        return processEngine
+                .getRepositoryService()
                 .createProcessDefinitionQuery()
                 .processDefinitionId(processDefinitionId)
                 .singleResult()
@@ -70,31 +74,38 @@ public class ActivitiTasks {
     }
 
     public void claim(String taskId, String userId, List<String> userGroups) {
-        verifyClaim(taskId, userId, userGroups);
-        taskService.claim(taskId, userId);
+        verifyTaskExists(taskId);
+        Rights rights = getRightsToTask(taskId, userId, userGroups);
+        if (!rights.canClaim())
+            throw new ClaimForbiddenException(taskId);
+        processEngine.getTaskService().claim(taskId, userId);
     }
 
-    private void verifyClaim(String taskId, String userId, List<String> userGroups) {
+    public void unclaim(String taskId, String userId, List<String> userGroups) {
+        verifyTaskExists(taskId);
+        Rights rights = getRightsToTask(taskId, userId, userGroups);
+        if (!rights.canUnclaim())
+            throw new UnclaimForbiddenException(taskId);
+        processEngine.getTaskService().unclaim(taskId);
+    }
+
+    private Rights getRightsToTask(String taskId, String userId, List<String> userGroups) {
+        return new ActivitiUserRights(processEngine, userId, userGroups).toTask(taskId);
+    }
+
+    private void verifyTaskExists(String taskId) {
         if (!taskExists(taskId))
             throw new NoSuchTaskException(taskId);
-        if (!canClaim(taskId, userId, userGroups))
-            throw new ClaimForbiddenException(taskId);
-    }
-
-    private Boolean canClaim(String taskId, String userId, List<String> userGroups) {
-        return listAvailableFor(userId, userGroups)
-                .stream()
-                .anyMatch(t -> t.id.equals(taskId));
     }
 
     private Boolean taskExists(String taskId) {
         return Optional.ofNullable(
-                taskService
+                processEngine
+                        .getTaskService()
                 .createTaskQuery()
                 .active()
                 .taskId(taskId)
                         .singleResult()
         ).isPresent();
     }
-
 }

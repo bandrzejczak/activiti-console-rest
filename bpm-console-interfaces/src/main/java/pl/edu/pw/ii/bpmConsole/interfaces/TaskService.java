@@ -14,5 +14,7 @@ public interface TaskService {
 
     void claim(String taskId, String userId, List<String> userGroups);
 
+    void unclaim(String taskId, String id, List<String> groups);
+
     FormInfo findFormForTask(String taskId, Rights rightsToTask);
 }

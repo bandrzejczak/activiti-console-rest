@@ -1,11 +1,13 @@
 package pl.edu.pw.ii.bpmConsole.activiti.task;
 
+import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
@@ -43,6 +45,15 @@ public class TaskListingSpec {
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     RepositoryService repositoryServiceMock;
 
+    @Mock
+    ProcessEngine processEngineMock;
+
+    @Before
+    public void initProcessEngineMock() {
+        when(processEngineMock.getRepositoryService()).thenReturn(repositoryServiceMock);
+        when(processEngineMock.getTaskService()).thenReturn(taskServiceMock);
+    }
+
     @Test
     public void shouldReturnEmptyListIfThereAreNoTasks() {
         //given
@@ -57,7 +68,7 @@ public class TaskListingSpec {
                         .list()
         ).thenReturn(Collections.emptyList());
         //when
-        List<TaskInfo> tasks = new ActivitiTasks(taskServiceMock, repositoryServiceMock).listAssignedTo(USER_ID);
+        List<TaskInfo> tasks = new ActivitiTasks(processEngineMock).listAssignedTo(USER_ID);
         //then
         assertThat(tasks).isEmpty();
         verifyZeroInteractions(repositoryServiceMock);
@@ -84,7 +95,7 @@ public class TaskListingSpec {
                         .singleResult()
         ).thenReturn(prepareProcessDefinition(PROCESS_DEFINITION_NAME));
         //when
-        List<TaskInfo> returnedTasks = new ActivitiTasks(taskServiceMock, repositoryServiceMock).listAssignedTo(USER_ID);
+        List<TaskInfo> returnedTasks = new ActivitiTasks(processEngineMock).listAssignedTo(USER_ID);
         //then
         assertThat(returnedTasks).hasSize(2);
         assertThatReturnedTaskHasActivitiTaskData(returnedTasks, activitiTasks);
@@ -106,7 +117,7 @@ public class TaskListingSpec {
                         .singleResult()
         ).thenReturn(prepareProcessDefinition(PROCESS_DEFINITION_NAME));
         //when
-        List<TaskInfo> returnedTasks = new ActivitiTasks(taskServiceMock, repositoryServiceMock).listAvailableFor(USER_ID, USER_GROUPS);
+        List<TaskInfo> returnedTasks = new ActivitiTasks(processEngineMock).listAvailableFor(USER_ID, USER_GROUPS);
         //then
         assertThat(returnedTasks).hasSize(2);
         assertThatReturnedTaskHasActivitiTaskData(returnedTasks, activitiTasks);

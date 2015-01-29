@@ -14,7 +14,7 @@ import javax.ws.rs.ext.Provider;
 public class ProcessEngineExceptionMapper implements ExceptionMapper<ProcessEngineException> {
     @Override
     public Response toResponse(ProcessEngineException exception) {
-        return Response.serverError()
+        return Response.status(exception.code)
                 .entity(new ProcessEngineErrorMessage(exception))
                 .type(MediaType.APPLICATION_JSON)
                 .build();

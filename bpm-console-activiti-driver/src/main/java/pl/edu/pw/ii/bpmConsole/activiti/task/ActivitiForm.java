@@ -47,7 +47,7 @@ public class ActivitiForm {
     }
 
     private TaskInfo mapTask(Task task) {
-        return new ActivitiTasks(processEngine.getTaskService(), processEngine.getRepositoryService()).mapTask(task);
+        return new ActivitiTasks(processEngine).mapTask(task);
     }
 
     private List<FieldInfo> mapFields(List<FormProperty> formProperties) {

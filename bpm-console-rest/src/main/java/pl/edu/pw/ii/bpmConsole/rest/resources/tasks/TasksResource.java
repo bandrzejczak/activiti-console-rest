@@ -3,6 +3,7 @@ package pl.edu.pw.ii.bpmConsole.rest.resources.tasks;
 import io.dropwizard.auth.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 import pl.edu.pw.ii.bpmConsole.interfaces.TaskService;
 import pl.edu.pw.ii.bpmConsole.interfaces.UserService;
 import pl.edu.pw.ii.bpmConsole.rest.filters.BpmUser;
@@ -12,6 +13,7 @@ import pl.edu.pw.ii.bpmConsole.valueObjects.Rights;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Map;
 
 @Component
 @Produces(MediaType.APPLICATION_JSON)
@@ -52,6 +54,26 @@ public class TasksResource {
         taskService.claim(taskId, user.id, user.groups);
         return Response
                 .noContent()
+                .links(LinkBuilder.fromResource(TasksResource.class).rel("self").build())
+                .build();
+    }
+
+    @POST
+    @Path("/{taskId}/unclaim")
+    public Response unclaim(@Auth BpmUser user, @PathParam("taskId") String taskId) {
+        taskService.unclaim(taskId, user.id, user.groups);
+        return Response
+                .ok()
+                .links(LinkBuilder.fromResource(TasksResource.class).rel("self").build())
+                .build();
+    }
+
+    @POST
+    @Path("/{taskId}/submit")
+    public Response submit(@Auth BpmUser user, @PathParam("taskId") String taskId, @RequestBody Map<String, String> properties) {
+//        taskService.claim(taskId, user.id, user.groups);
+        return Response
+                .ok()
                 .links(LinkBuilder.fromResource(TasksResource.class).rel("self").build())
                 .build();
     }
