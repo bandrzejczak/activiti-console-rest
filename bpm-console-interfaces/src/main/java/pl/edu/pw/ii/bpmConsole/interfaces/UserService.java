@@ -30,4 +30,6 @@ public interface UserService {
     void createGroup(GroupInfo groupInfo);
 
     void editGroup(GroupInfo groupInfo, String groupId);
+
+    void deleteUser(String userId);
 }

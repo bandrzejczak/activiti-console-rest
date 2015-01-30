@@ -46,7 +46,7 @@ public class UserResource {
     public Response create(@Auth BpmUser user, @Valid UserInfo userInfo) {
         userService.createUser(userInfo);
         return Response
-                .noContent()
+                .ok()
                 .links(LinkBuilder.fromResource(UserResource.class).rel("self").build())
                 .build();
     }
@@ -56,7 +56,17 @@ public class UserResource {
     public Response edit(@Auth BpmUser user, @PathParam("id") String userId, @Valid UserInfo userInfo) {
         userService.editUser(userInfo, userId);
         return Response
-                .noContent()
+                .ok()
+                .links(LinkBuilder.fromResource(UserResource.class).rel("self").build())
+                .build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public Response delete(@Auth BpmUser user, @PathParam("id") String userId) {
+        userService.deleteUser(userId);
+        return Response
+                .ok()
                 .links(LinkBuilder.fromResource(UserResource.class).rel("self").build())
                 .build();
     }

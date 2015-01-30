@@ -99,4 +99,9 @@ public class ActivitiUsers {
         if (!Strings.isNullOrEmpty(userInfo.newPassword))
             user.setPassword(userInfo.newPassword);
     }
+
+    public void delete(String userId) {
+        User user = findUser(userId).orElseThrow(() -> new NoSuchUserException(userId));
+        identityService.deleteUser(userId);
+    }
 }

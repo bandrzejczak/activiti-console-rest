@@ -55,7 +55,7 @@ public class GroupResource {
     public Response create(@Auth BpmUser user, @Valid GroupInfo groupInfo) {
         userService.createGroup(groupInfo);
         return Response
-                .noContent()
+                .ok()
                 .links(LinkBuilder.fromResource(GroupResource.class).rel("self").build())
                 .build();
     }
@@ -65,7 +65,7 @@ public class GroupResource {
     public Response edit(@Auth BpmUser user, @PathParam("id") String groupId, @Valid GroupInfo groupInfo) {
         userService.editGroup(groupInfo, groupId);
         return Response
-                .noContent()
+                .ok()
                 .links(LinkBuilder.fromResource(GroupResource.class).rel("self").build())
                 .build();
     }
