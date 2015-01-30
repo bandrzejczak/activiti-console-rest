@@ -18,7 +18,7 @@ public class ActivitiUserService implements UserService {
         this.processEngine = processEngine;
     }
 
-    //TODO delete it!
+    //TODO fix it!
     @Override
     public List<String> getUserGroups(String username) {
         return processEngine.getIdentityService()
@@ -72,4 +72,10 @@ public class ActivitiUserService implements UserService {
     public List<GroupInfo> listGroups() {
         return new ActivitiGroups(processEngine.getIdentityService()).list();
     }
+
+    @Override
+    public UserInfo getUser(String userId) {
+        return new ActivitiUsers(processEngine.getIdentityService()).get(userId);
+    }
+
 }

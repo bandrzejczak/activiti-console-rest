@@ -2,9 +2,11 @@ package pl.edu.pw.ii.bpmConsole.activiti.user;
 
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.identity.User;
+import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.NoSuchUserException;
 import pl.edu.pw.ii.bpmConsole.valueObjects.UserInfo;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ActivitiUsers {
@@ -30,5 +32,19 @@ public class ActivitiUsers {
         userInfo.lastName = user.getLastName();
         userInfo.email = user.getEmail();
         return userInfo;
+    }
+
+    public UserInfo get(String userId) {
+        User user = findUser(userId).orElseThrow(() -> new NoSuchUserException(userId));
+        return mapUser(user);
+    }
+
+    private Optional<User> findUser(String userId) {
+        return Optional.ofNullable(
+                identityService
+                        .createUserQuery()
+                        .userId(userId)
+                        .singleResult()
+        );
     }
 }

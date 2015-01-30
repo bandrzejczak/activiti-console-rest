@@ -7,10 +7,7 @@ import pl.edu.pw.ii.bpmConsole.interfaces.UserService;
 import pl.edu.pw.ii.bpmConsole.rest.filters.BpmUser;
 import pl.edu.pw.ii.bpmConsole.rest.resources.LinkBuilder;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -30,6 +27,15 @@ public class UserResource {
     public Response list(@Auth BpmUser user) {
         return Response
                 .ok(userService.listUsers())
+                .links(LinkBuilder.fromResource(UserResource.class).rel("self").build())
+                .build();
+    }
+
+    @GET
+    @Path("/{id}")
+    public Response get(@Auth BpmUser user, @PathParam("id") String userId) {
+        return Response
+                .ok(userService.getUser(userId))
                 .links(LinkBuilder.fromResource(UserResource.class).rel("self").build())
                 .build();
     }

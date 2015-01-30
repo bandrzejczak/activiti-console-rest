@@ -22,4 +22,6 @@ public interface UserService {
     List<UserInfo> listUsers();
 
     List<GroupInfo> listGroups();
+
+    UserInfo getUser(String userId);
 }
