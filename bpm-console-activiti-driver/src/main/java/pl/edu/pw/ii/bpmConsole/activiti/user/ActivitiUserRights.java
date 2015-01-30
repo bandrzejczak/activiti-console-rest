@@ -63,7 +63,7 @@ public class ActivitiUserRights implements UserRights {
 
     @Override
     public void toUser(String userId) {
-        if (user.isMemberOf(AuthUserGroup.ADMIN) || user.id.equals(userId))
+        if (!user.isMemberOf(AuthUserGroup.ADMIN) && !user.id.equals(userId))
             throw new AccessDeniedException();
     }
 
