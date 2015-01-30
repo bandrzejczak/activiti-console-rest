@@ -78,4 +78,8 @@ public class ActivitiUserService implements UserService {
         return new ActivitiUsers(processEngine.getIdentityService()).get(userId);
     }
 
+    @Override
+    public GroupInfo getGroup(String groupId) {
+        return new ActivitiGroups(processEngine.getIdentityService()).get(groupId);
+    }
 }
