@@ -31,7 +31,9 @@ public class ProcessInstances {
 
     private ProcessInstanceInfo mapProcessInstance(HistoricProcessInstance processInstance) {
         ProcessInstanceInfo processInstanceInfo = new ProcessInstanceInfo();
+        processInstanceInfo.id = processInstance.getId();
         processInstanceInfo.processDefinitionId = processInstance.getProcessDefinitionId();
+        processInstanceInfo.name = getProcessDefinitionName(processInstance.getProcessDefinitionId());
         processInstanceInfo.startTime = processInstance.getStartTime();
         Optional<Task> currentTaskOptional = findCurrentTask(processInstance.getId());
         if (currentTaskOptional.isPresent()) {
@@ -41,6 +43,15 @@ public class ProcessInstances {
         } else
             processInstanceInfo.currentTask = new TaskInfo();
         return processInstanceInfo;
+    }
+
+    private String getProcessDefinitionName(String processDefinitionId) {
+        return processEngine
+                .getRepositoryService()
+                .createProcessDefinitionQuery()
+                .processDefinitionId(processDefinitionId)
+                .singleResult()
+                .getName();
     }
 
     private Optional<Task> findCurrentTask(String id) {
