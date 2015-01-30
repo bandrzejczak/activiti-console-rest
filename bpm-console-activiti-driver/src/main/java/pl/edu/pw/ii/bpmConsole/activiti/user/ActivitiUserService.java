@@ -96,4 +96,9 @@ public class ActivitiUserService implements UserService {
     public void addMembership(String groupId, String userId) {
         new ActivitiGroups(processEngine.getIdentityService()).addMembership(groupId, userId);
     }
+
+    @Override
+    public void deleteMembership(String groupId, String userId) {
+        new ActivitiGroups(processEngine.getIdentityService()).deleteMembership(groupId, userId);
+    }
 }

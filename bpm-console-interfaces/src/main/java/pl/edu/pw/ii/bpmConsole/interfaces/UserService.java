@@ -34,4 +34,6 @@ public interface UserService {
     void deleteGroup(String groupId);
 
     void addMembership(String groupId, String userId);
+
+    void deleteMembership(String groupId, String userId);
 }

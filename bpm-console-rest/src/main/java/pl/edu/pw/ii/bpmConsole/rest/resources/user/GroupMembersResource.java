@@ -34,4 +34,13 @@ public class GroupMembersResource {
                 .links(LinkBuilder.fromResource(GroupResource.class).rel("self").build())
                 .build();
     }
+
+    @DELETE
+    public Response delete(@Auth BpmUser user, @PathParam("groupId") String groupId, @Valid UserIdInfo userIdInfo) {
+        userService.deleteMembership(groupId, userIdInfo.id);
+        return Response
+                .ok()
+                .links(LinkBuilder.fromResource(GroupResource.class).rel("self").build())
+                .build();
+    }
 }
