@@ -4,6 +4,7 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.identity.Group;
 import pl.edu.pw.ii.bpmConsole.interfaces.UserRights;
 import pl.edu.pw.ii.bpmConsole.interfaces.UserService;
+import pl.edu.pw.ii.bpmConsole.valueObjects.UserInfo;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,5 +60,10 @@ public class ActivitiUserService implements UserService {
     @Override
     public UserRights verifyRights(String id, List<String> groups) {
         return new ActivitiUserRights(processEngine, id, groups);
+    }
+
+    @Override
+    public List<UserInfo> listUsers() {
+        return new ActivitiUsers(processEngine.getIdentityService()).list();
     }
 }
