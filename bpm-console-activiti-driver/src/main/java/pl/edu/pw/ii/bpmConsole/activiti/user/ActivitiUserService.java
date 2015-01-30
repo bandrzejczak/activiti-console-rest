@@ -82,4 +82,14 @@ public class ActivitiUserService implements UserService {
     public GroupInfo getGroup(String groupId) {
         return new ActivitiGroups(processEngine.getIdentityService()).get(groupId);
     }
+
+    @Override
+    public void createUser(UserInfo userInfo) {
+        new ActivitiUsers(processEngine.getIdentityService()).edit(userInfo, null);
+    }
+
+    @Override
+    public void editUser(UserInfo userInfo, String userId) {
+        new ActivitiUsers(processEngine.getIdentityService()).edit(userInfo, userId);
+    }
 }

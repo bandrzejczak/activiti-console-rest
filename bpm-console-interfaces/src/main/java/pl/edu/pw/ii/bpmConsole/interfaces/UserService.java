@@ -26,4 +26,8 @@ public interface UserService {
     UserInfo getUser(String userId);
 
     GroupInfo getGroup(String groupId);
+
+    void createUser(UserInfo userInfo);
+
+    void editUser(UserInfo userInfo, String userId);
 }

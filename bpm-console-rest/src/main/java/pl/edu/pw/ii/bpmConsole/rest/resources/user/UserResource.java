@@ -6,7 +6,9 @@ import org.springframework.stereotype.Component;
 import pl.edu.pw.ii.bpmConsole.interfaces.UserService;
 import pl.edu.pw.ii.bpmConsole.rest.filters.BpmUser;
 import pl.edu.pw.ii.bpmConsole.rest.resources.LinkBuilder;
+import pl.edu.pw.ii.bpmConsole.valueObjects.UserInfo;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -36,6 +38,25 @@ public class UserResource {
     public Response get(@Auth BpmUser user, @PathParam("id") String userId) {
         return Response
                 .ok(userService.getUser(userId))
+                .links(LinkBuilder.fromResource(UserResource.class).rel("self").build())
+                .build();
+    }
+
+    @POST
+    public Response create(@Auth BpmUser user, @Valid UserInfo userInfo) {
+        userService.createUser(userInfo);
+        return Response
+                .noContent()
+                .links(LinkBuilder.fromResource(UserResource.class).rel("self").build())
+                .build();
+    }
+
+    @PUT
+    @Path("/{id}")
+    public Response edit(@Auth BpmUser user, @PathParam("id") String userId, @Valid UserInfo userInfo) {
+        userService.editUser(userInfo, userId);
+        return Response
+                .noContent()
                 .links(LinkBuilder.fromResource(UserResource.class).rel("self").build())
                 .build();
     }
