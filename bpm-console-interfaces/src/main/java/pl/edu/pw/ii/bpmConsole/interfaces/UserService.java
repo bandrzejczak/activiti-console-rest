@@ -11,8 +11,6 @@ public interface UserService {
 
     boolean checkPassword(String username, String password);
 
-    void createMembership(String login, String groupName);
-
     UserRights verifyRights(String id, List<String> groups);
 
     List<UserInfo> listUsers();
@@ -34,4 +32,6 @@ public interface UserService {
     void deleteUser(String userId);
 
     void deleteGroup(String groupId);
+
+    void addMembership(String groupId, String userId);
 }

@@ -49,6 +49,6 @@ public class DatabasePopulator implements ApplicationListener<ContextRefreshedEv
     }
 
     private void addUserToUserGroup(User user) {
-        userService.createMembership(user.login, user.login);
+        userService.addMembership(user.login, user.login);
     }
 }

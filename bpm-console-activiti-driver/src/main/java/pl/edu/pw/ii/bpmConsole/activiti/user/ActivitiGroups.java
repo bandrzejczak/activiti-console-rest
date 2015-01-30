@@ -4,8 +4,10 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.identity.Group;
+import org.activiti.engine.identity.User;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.GroupAlreadyExistsException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.NoSuchGroupException;
+import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.NoSuchUserException;
 import pl.edu.pw.ii.bpmConsole.valueObjects.GroupInfo;
 import pl.edu.pw.ii.bpmConsole.valueObjects.GroupType;
 
@@ -80,5 +82,15 @@ public class ActivitiGroups {
     public void delete(String groupId) {
         findGroup(groupId).orElseThrow(() -> new NoSuchGroupException(groupId));
         identityService.deleteGroup(groupId);
+    }
+
+    public void addMembership(String groupId, String userId) {
+        findGroup(groupId).orElseThrow(() -> new NoSuchGroupException(groupId));
+        findUser(userId).orElseThrow(() -> new NoSuchUserException(userId));
+        identityService.createMembership(userId, groupId);
+    }
+
+    private Optional<User> findUser(String userId) {
+        return new ActivitiUsers(identityService).findUser(userId);
     }
 }

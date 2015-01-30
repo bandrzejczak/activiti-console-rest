@@ -57,7 +57,7 @@ public class ActivitiUsers {
         return userId == null || userId.equals(userInfo.id);
     }
 
-    private Optional<User> findUser(String userId) {
+    Optional<User> findUser(String userId) {
         return Optional.ofNullable(
                 identityService
                         .createUserQuery()

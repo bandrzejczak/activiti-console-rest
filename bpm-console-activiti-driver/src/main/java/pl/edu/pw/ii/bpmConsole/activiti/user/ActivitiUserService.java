@@ -37,12 +37,6 @@ public class ActivitiUserService implements UserService {
                 .checkPassword(username, password);
     }
 
-    //TODO delete it!
-    @Override
-    public void createMembership(String login, String groupName) {
-        processEngine.getIdentityService().createMembership(login, groupName);
-    }
-
     @Override
     public UserRights verifyRights(String id, List<String> groups) {
         return new ActivitiUserRights(processEngine, id, groups);
@@ -96,5 +90,10 @@ public class ActivitiUserService implements UserService {
     @Override
     public void deleteGroup(String groupId) {
         new ActivitiGroups(processEngine.getIdentityService()).delete(groupId);
+    }
+
+    @Override
+    public void addMembership(String groupId, String userId) {
+        new ActivitiGroups(processEngine.getIdentityService()).addMembership(groupId, userId);
     }
 }
