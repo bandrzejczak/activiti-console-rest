@@ -26,7 +26,7 @@ public class ExceptionMappersSpec extends BpmIntegrationTest {
                 .request()
                 .post(Entity.entity(singleProcess, MediaType.APPLICATION_JSON));
         //then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR_500);
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST_400);
         Map<String, String> map = response.readEntity(new GenericType<>(Map.class));
         assertThat(map.get("errorClass")).isEqualTo(ZipFileHasNoProcessesException.class.getSimpleName());
     }
