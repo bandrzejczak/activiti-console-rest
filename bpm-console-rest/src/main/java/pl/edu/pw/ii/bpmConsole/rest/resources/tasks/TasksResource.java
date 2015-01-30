@@ -5,10 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 import pl.edu.pw.ii.bpmConsole.interfaces.TaskService;
-import pl.edu.pw.ii.bpmConsole.interfaces.UserService;
-import pl.edu.pw.ii.bpmConsole.rest.filters.BpmUser;
 import pl.edu.pw.ii.bpmConsole.rest.resources.LinkBuilder;
-import pl.edu.pw.ii.bpmConsole.valueObjects.Rights;
+import pl.edu.pw.ii.bpmConsole.valueObjects.AuthUser;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -22,17 +20,15 @@ import java.util.Map;
 public class TasksResource {
 
     private final TaskService taskService;
-    private final UserService userService;
 
     @Autowired
-    public TasksResource(TaskService taskService, UserService userService) {
+    public TasksResource(TaskService taskService) {
         this.taskService = taskService;
-        this.userService = userService;
     }
 
     @GET
     @Path("/inbox")
-    public Response inbox(@Auth BpmUser user) {
+    public Response inbox(@Auth AuthUser user) {
         return Response
                 .ok(taskService.listAssignedTo(user.id))
                 .links(LinkBuilder.fromResource(TasksResource.class).rel("self").build())
@@ -41,17 +37,17 @@ public class TasksResource {
 
     @GET
     @Path("/awaiting")
-    public Response awaiting(@Auth BpmUser user) {
+    public Response awaiting(@Auth AuthUser user) {
         return Response
-                .ok(taskService.listAvailableFor(user.id, user.groups))
+                .ok(taskService.listAvailableFor(user))
                 .links(LinkBuilder.fromResource(TasksResource.class).rel("self").build())
                 .build();
     }
 
     @POST
     @Path("/{taskId}/claim")
-    public Response claim(@Auth BpmUser user, @PathParam("taskId") String taskId) {
-        taskService.claim(taskId, user.id, user.groups);
+    public Response claim(@Auth AuthUser user, @PathParam("taskId") String taskId) {
+        taskService.claim(taskId, user);
         return Response
                 .noContent()
                 .links(LinkBuilder.fromResource(TasksResource.class).rel("self").build())
@@ -60,8 +56,8 @@ public class TasksResource {
 
     @POST
     @Path("/{taskId}/unclaim")
-    public Response unclaim(@Auth BpmUser user, @PathParam("taskId") String taskId) {
-        taskService.unclaim(taskId, user.id, user.groups);
+    public Response unclaim(@Auth AuthUser user, @PathParam("taskId") String taskId) {
+        taskService.unclaim(taskId, user);
         return Response
                 .ok()
                 .links(LinkBuilder.fromResource(TasksResource.class).rel("self").build())
@@ -70,7 +66,7 @@ public class TasksResource {
 
     @POST
     @Path("/{taskId}/submit")
-    public Response submit(@Auth BpmUser user, @PathParam("taskId") String taskId, @RequestBody Map<String, String> properties) {
+    public Response submit(@Auth AuthUser user, @PathParam("taskId") String taskId, @RequestBody Map<String, String> properties) {
         taskService.submit(taskId, user.id, properties);
         return Response
                 .ok()
@@ -80,10 +76,9 @@ public class TasksResource {
 
     @GET
     @Path("/{taskId}/form")
-    public Response form(@Auth BpmUser user, @PathParam("taskId") String taskId) {
-        Rights rightsToTask = userService.verifyRights(user.id, user.groups).toTask(taskId);
+    public Response form(@Auth AuthUser user, @PathParam("taskId") String taskId) {
         return Response
-                .ok(taskService.findFormForTask(taskId, rightsToTask))
+                .ok(taskService.findFormForTask(taskId, user))
                 .links(LinkBuilder.fromResource(TasksResource.class).rel("self").build())
                 .build();
     }

@@ -7,6 +7,7 @@ import org.activiti.engine.task.IdentityLinkType;
 import pl.edu.pw.ii.bpmConsole.interfaces.ProcessService;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.NoSuchProcessException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.ProcessStartForbiddenException;
+import pl.edu.pw.ii.bpmConsole.valueObjects.AuthUser;
 import pl.edu.pw.ii.bpmConsole.valueObjects.ProcessDefinitionInfo;
 import pl.edu.pw.ii.bpmConsole.valueObjects.ProcessInstanceInfo;
 
@@ -23,7 +24,7 @@ public class ActivitiProcessService implements ProcessService {
     }
 
     @Override
-    public Collection<ProcessDefinitionInfo> listStartableProcesses(String userId, List<String> groups) {
+    public Collection<ProcessDefinitionInfo> listStartableProcesses(AuthUser user) {
         return processEngine
                 .getRepositoryService()
                 .createProcessDefinitionQuery()
@@ -31,17 +32,17 @@ public class ActivitiProcessService implements ProcessService {
                 .latestVersion()
                 .list()
                 .stream()
-                .filter(p -> isStartableByUser(p.getId(), userId, groups))
+                .filter(p -> isStartableByUser(p.getId(), user))
                 .map(this::mapProcessDefinition)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void startProcess(String processDefinitionId, String userId, List<String> groups) {
+    public void startProcess(String processDefinitionId, AuthUser user) {
         verifyProcessDefinitionExists(processDefinitionId);
-        if (!isStartableByUser(processDefinitionId, userId, groups))
+        if (!isStartableByUser(processDefinitionId, user))
             throw new ProcessStartForbiddenException(processDefinitionId);
-        processEngine.getIdentityService().setAuthenticatedUserId(userId);
+        processEngine.getIdentityService().setAuthenticatedUserId(user.id);
         processEngine.getRuntimeService().startProcessInstanceById(processDefinitionId);
     }
 
@@ -50,14 +51,14 @@ public class ActivitiProcessService implements ProcessService {
         return new ProcessInstances(processEngine).list();
     }
 
-    private Boolean isStartableByUser(String processDefinitionId, String userId, List<String> groups) {
+    private Boolean isStartableByUser(String processDefinitionId, AuthUser user) {
         List<IdentityLink> identityLinks = processEngine.getRepositoryService()
                 .getIdentityLinksForProcessDefinition(processDefinitionId);
         return identityLinks.isEmpty() ||
                 identityLinks
                         .stream()
                         .anyMatch(i -> IdentityLinkType.CANDIDATE.equals(i.getType()) &&
-                                (userId.equals(i.getUserId()) || groups.contains(i.getGroupId())));
+                                (user.id.equals(i.getUserId()) || user.groups.contains(i.getGroupId())));
     }
 
     private ProcessDefinitionInfo mapProcessDefinition(ProcessDefinition processDefinition) {

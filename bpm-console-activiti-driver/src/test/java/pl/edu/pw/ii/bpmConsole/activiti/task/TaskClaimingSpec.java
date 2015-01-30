@@ -25,7 +25,7 @@ public class TaskClaimingSpec extends AbstractTaskSpec {
         when(taskServiceMock.createTaskQuery().active()).thenReturn(taskQueryMock);
         whenLookingForTaskReturn(null);
         //when - then
-        assertThrown(() -> new ActivitiTasks(processEngineMock).claim(TASK_ID, USER_ID, USER_GROUPS))
+        assertThrown(() -> new ActivitiTasks(processEngineMock).claim(TASK_ID, USER))
                 .isInstanceOf(NoSuchTaskException.class);
     }
 
@@ -36,7 +36,7 @@ public class TaskClaimingSpec extends AbstractTaskSpec {
         whenLookingForTaskReturn(new TaskEntity());
         whenLookingForTaskToAssignReturn(Collections.emptyList());
         //when - then
-        assertThrown(() -> new ActivitiTasks(processEngineMock).claim(TASK_ID, USER_ID, USER_GROUPS))
+        assertThrown(() -> new ActivitiTasks(processEngineMock).claim(TASK_ID, USER))
                 .isInstanceOf(ClaimForbiddenException.class);
     }
 
@@ -54,7 +54,7 @@ public class TaskClaimingSpec extends AbstractTaskSpec {
         whenLookingForTaskToAssignReturn(Collections.singletonList(task));
         whenLookingForProcessDefinitonNameReturn(PROCESS_DEFINITION_NAME);
         //when
-        new ActivitiTasks(processEngineMock).claim(TASK_ID, USER_ID, USER_GROUPS);
+        new ActivitiTasks(processEngineMock).claim(TASK_ID, USER);
         //then
         verify(
                 taskServiceMock

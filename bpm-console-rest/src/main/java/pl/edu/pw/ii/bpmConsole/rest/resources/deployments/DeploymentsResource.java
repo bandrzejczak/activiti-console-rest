@@ -4,8 +4,9 @@ import io.dropwizard.auth.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.edu.pw.ii.bpmConsole.interfaces.DeploymentService;
-import pl.edu.pw.ii.bpmConsole.rest.filters.BpmUser;
 import pl.edu.pw.ii.bpmConsole.rest.resources.LinkBuilder;
+import pl.edu.pw.ii.bpmConsole.rest.resources.RightsVerification;
+import pl.edu.pw.ii.bpmConsole.valueObjects.AuthUser;
 import pl.edu.pw.ii.bpmConsole.valueObjects.File;
 
 import javax.ws.rs.*;
@@ -17,7 +18,7 @@ import javax.ws.rs.core.UriBuilder;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/deployments")
-public class DeploymentsResource {
+public class DeploymentsResource implements RightsVerification {
 
     DeploymentService deploymentService;
 
@@ -27,7 +28,8 @@ public class DeploymentsResource {
     }
 
     @POST
-    public Response deploy(@Auth BpmUser user, File file) {
+    public Response deploy(@Auth AuthUser user, File file) {
+        verifyAdminRights(user);
         deploymentService.create(file).deploy();
         return Response.created(
                 UriBuilder
@@ -39,7 +41,8 @@ public class DeploymentsResource {
     }
 
     @GET
-    public Response list(@Auth BpmUser user) {
+    public Response list(@Auth AuthUser user) {
+        verifyAdminRights(user);
         return Response
                 .ok(deploymentService.list())
                 .links(
@@ -48,6 +51,5 @@ public class DeploymentsResource {
                 )
                 .build();
     }
-
 
 }

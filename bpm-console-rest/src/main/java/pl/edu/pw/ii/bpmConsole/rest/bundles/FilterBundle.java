@@ -9,8 +9,8 @@ import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.hk2.utilities.Binder;
 import pl.edu.pw.ii.bpmConsole.rest.configuration.BpmConsoleConfiguration;
 import pl.edu.pw.ii.bpmConsole.rest.filters.BpmAuthenticator;
-import pl.edu.pw.ii.bpmConsole.rest.filters.BpmUser;
 import pl.edu.pw.ii.bpmConsole.rest.filters.JSONVulnerabilityProtectionFilter;
+import pl.edu.pw.ii.bpmConsole.valueObjects.AuthUser;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
@@ -59,7 +59,7 @@ public class FilterBundle implements ConfiguredBundle<BpmConsoleConfiguration> {
         return AuthFactory.binder(new BasicAuthFactory<>(
                 configuration.springContext.getBean(BpmAuthenticator.class),
                 "ActivitiAuthenticator",
-                BpmUser.class
+                AuthUser.class
         ));
     }
 }

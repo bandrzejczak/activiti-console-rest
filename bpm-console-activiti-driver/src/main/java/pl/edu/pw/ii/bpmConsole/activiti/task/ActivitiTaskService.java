@@ -2,8 +2,8 @@ package pl.edu.pw.ii.bpmConsole.activiti.task;
 
 import org.activiti.engine.ProcessEngine;
 import pl.edu.pw.ii.bpmConsole.interfaces.TaskService;
+import pl.edu.pw.ii.bpmConsole.valueObjects.AuthUser;
 import pl.edu.pw.ii.bpmConsole.valueObjects.FormInfo;
-import pl.edu.pw.ii.bpmConsole.valueObjects.Rights;
 import pl.edu.pw.ii.bpmConsole.valueObjects.TaskInfo;
 
 import java.util.List;
@@ -23,18 +23,18 @@ public class ActivitiTaskService implements TaskService {
     }
 
     @Override
-    public List<TaskInfo> listAvailableFor(String userId, List<String> userGroups) {
-        return new ActivitiTasks(processEngine).listAvailableFor(userId, userGroups);
+    public List<TaskInfo> listAvailableFor(AuthUser user) {
+        return new ActivitiTasks(processEngine).listAvailableFor(user);
     }
 
     @Override
-    public void claim(String taskId, String userId, List<String> userGroups) {
-        new ActivitiTasks(processEngine).claim(taskId, userId, userGroups);
+    public void claim(String taskId, AuthUser user) {
+        new ActivitiTasks(processEngine).claim(taskId, user);
     }
 
     @Override
-    public void unclaim(String taskId, String userId, List<String> userGroups) {
-        new ActivitiTasks(processEngine).unclaim(taskId, userId, userGroups);
+    public void unclaim(String taskId, AuthUser user) {
+        new ActivitiTasks(processEngine).unclaim(taskId, user);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ActivitiTaskService implements TaskService {
     }
 
     @Override
-    public FormInfo findFormForTask(String taskId, Rights rightsToTask) {
-        return new ActivitiForm(processEngine).findFormForTask(taskId, rightsToTask);
+    public FormInfo findFormForTask(String taskId, AuthUser user) {
+        return new ActivitiForm(processEngine).findFormForTask(taskId, user);
     }
 }

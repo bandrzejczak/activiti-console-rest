@@ -7,11 +7,12 @@ import io.dropwizard.auth.basic.BasicCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.edu.pw.ii.bpmConsole.interfaces.UserService;
+import pl.edu.pw.ii.bpmConsole.valueObjects.AuthUser;
 
 import java.util.List;
 
 @Component
-public class BpmAuthenticator implements Authenticator<BasicCredentials, BpmUser> {
+public class BpmAuthenticator implements Authenticator<BasicCredentials, AuthUser> {
 
     private UserService userService;
 
@@ -21,7 +22,7 @@ public class BpmAuthenticator implements Authenticator<BasicCredentials, BpmUser
     }
 
     @Override
-    public Optional<BpmUser> authenticate(BasicCredentials credentials) throws AuthenticationException {
+    public Optional<AuthUser> authenticate(BasicCredentials credentials) throws AuthenticationException {
         if (credentialsAreValid(credentials))
             return Optional.of(getUserData(credentials));
         return Optional.absent();
@@ -31,8 +32,8 @@ public class BpmAuthenticator implements Authenticator<BasicCredentials, BpmUser
         return userService.validateCredentials(credentials.getUsername(), credentials.getPassword());
     }
 
-    private BpmUser getUserData(BasicCredentials credentials) {
-        return new BpmUser(credentials.getUsername(), getUserGroups(credentials.getUsername()));
+    private AuthUser getUserData(BasicCredentials credentials) {
+        return new AuthUser(credentials.getUsername(), getUserGroups(credentials.getUsername()));
     }
 
     private List<String> getUserGroups(String username) {

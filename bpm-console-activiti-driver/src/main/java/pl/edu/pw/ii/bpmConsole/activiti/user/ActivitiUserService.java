@@ -3,6 +3,7 @@ package pl.edu.pw.ii.bpmConsole.activiti.user;
 import org.activiti.engine.ProcessEngine;
 import pl.edu.pw.ii.bpmConsole.interfaces.UserRights;
 import pl.edu.pw.ii.bpmConsole.interfaces.UserService;
+import pl.edu.pw.ii.bpmConsole.valueObjects.AuthUser;
 import pl.edu.pw.ii.bpmConsole.valueObjects.GroupInfo;
 import pl.edu.pw.ii.bpmConsole.valueObjects.UserInfo;
 
@@ -22,8 +23,8 @@ public class ActivitiUserService implements UserService {
     }
 
     @Override
-    public UserRights verifyRights(String id, List<String> groups) {
-        return new ActivitiUserRights(processEngine, id, groups);
+    public UserRights verifyRights(AuthUser user) {
+        return new ActivitiUserRights(processEngine, user);
     }
 
     @Override

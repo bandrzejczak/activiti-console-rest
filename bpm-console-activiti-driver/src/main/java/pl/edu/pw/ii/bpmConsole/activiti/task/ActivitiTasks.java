@@ -6,6 +6,7 @@ import pl.edu.pw.ii.bpmConsole.activiti.user.ActivitiUserRights;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.ClaimForbiddenException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.NoSuchTaskException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.UnclaimForbiddenException;
+import pl.edu.pw.ii.bpmConsole.valueObjects.AuthUser;
 import pl.edu.pw.ii.bpmConsole.valueObjects.Rights;
 import pl.edu.pw.ii.bpmConsole.valueObjects.TaskInfo;
 
@@ -32,15 +33,15 @@ public class ActivitiTasks {
         );
     }
 
-    public List<TaskInfo> listAvailableFor(String userId, List<String> userGroups) {
+    public List<TaskInfo> listAvailableFor(AuthUser user) {
         return mapTasks(
                 processEngine
                         .getTaskService()
                         .createTaskQuery()
                         .active()
                         .or()
-                        .taskCandidateUser(userId)
-                        .taskCandidateGroupIn(userGroups)
+                        .taskCandidateUser(user.id)
+                        .taskCandidateGroupIn(user.groups)
                         .endOr()
                         .list()
         );
@@ -73,24 +74,24 @@ public class ActivitiTasks {
                 .getName();
     }
 
-    public void claim(String taskId, String userId, List<String> userGroups) {
+    public void claim(String taskId, AuthUser user) {
         verifyTaskExists(taskId);
-        Rights rights = getRightsToTask(taskId, userId, userGroups);
+        Rights rights = getRightsToTask(taskId, user);
         if (!rights.canClaim())
             throw new ClaimForbiddenException(taskId);
-        processEngine.getTaskService().claim(taskId, userId);
+        processEngine.getTaskService().claim(taskId, user.id);
     }
 
-    public void unclaim(String taskId, String userId, List<String> userGroups) {
+    public void unclaim(String taskId, AuthUser user) {
         verifyTaskExists(taskId);
-        Rights rights = getRightsToTask(taskId, userId, userGroups);
+        Rights rights = getRightsToTask(taskId, user);
         if (!rights.canUnclaim())
             throw new UnclaimForbiddenException(taskId);
         processEngine.getTaskService().unclaim(taskId);
     }
 
-    public Rights getRightsToTask(String taskId, String userId, List<String> userGroups) {
-        return new ActivitiUserRights(processEngine, userId, userGroups).toTask(taskId);
+    public Rights getRightsToTask(String taskId, AuthUser user) {
+        return new ActivitiUserRights(processEngine, user).toTask(taskId);
     }
 
     public void verifyTaskExists(String taskId) {

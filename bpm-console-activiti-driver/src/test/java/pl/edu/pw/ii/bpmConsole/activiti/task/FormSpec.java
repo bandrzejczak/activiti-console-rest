@@ -12,7 +12,6 @@ import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.DateParsingException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.NoSuchTaskException;
 import pl.edu.pw.ii.bpmConsole.valueObjects.FieldInfo;
 import pl.edu.pw.ii.bpmConsole.valueObjects.FormInfo;
-import pl.edu.pw.ii.bpmConsole.valueObjects.Rights;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,8 +33,10 @@ public class FormSpec extends AbstractTaskSpec {
     public void shouldThrowExceptionIfTaskDoesntExist() {
         //given
         when(formServiceMock.getTaskFormData(TASK_ID)).thenReturn(null);
+        whenLookingForTaskReturn(null);
+        when(taskServiceMock.getIdentityLinksForTask(TASK_ID)).thenReturn(Collections.emptyList());
         //when - then
-        assertThrown(() -> new ActivitiForm(processEngineMock).findFormForTask(TASK_ID, Rights.CLAIM))
+        assertThrown(() -> new ActivitiForm(processEngineMock).findFormForTask(TASK_ID, USER))
                 .isInstanceOf(NoSuchTaskException.class);
     }
 
@@ -43,12 +44,16 @@ public class FormSpec extends AbstractTaskSpec {
     public void shouldReturnEmptyFieldsListForNoForm() {
         //given
         TaskFormDataImpl taskForm = new TaskFormDataImpl();
-        taskForm.setTask(new TaskEntity());
+        TaskEntity task = new TaskEntity();
+        task.setAssignee(USER_ID);
+        taskForm.setTask(task);
         taskForm.setFormProperties(Collections.emptyList());
         when(formServiceMock.getTaskFormData(TASK_ID)).thenReturn(taskForm);
+        whenLookingForTaskReturn(task);
+        when(taskServiceMock.getIdentityLinksForTask(TASK_ID)).thenReturn(Collections.emptyList());
         whenLookingForProcessDefinitonNameReturn(PROCESS_DEFINITION_NAME);
         //when
-        FormInfo formInfo = new ActivitiForm(processEngineMock).findFormForTask(TASK_ID, Rights.CLAIM);
+        FormInfo formInfo = new ActivitiForm(processEngineMock).findFormForTask(TASK_ID, USER);
         //then
         assertThat(formInfo.fields).isEmpty();
     }
@@ -59,8 +64,10 @@ public class FormSpec extends AbstractTaskSpec {
         TaskFormData testFormData = testFormData(false);
         when(formServiceMock.getTaskFormData(TASK_ID)).thenReturn(testFormData);
         whenLookingForProcessDefinitonNameReturn(PROCESS_DEFINITION_NAME);
+        whenLookingForTaskReturn(testFormData.getTask());
+        when(taskServiceMock.getIdentityLinksForTask(TASK_ID)).thenReturn(Collections.emptyList());
         //when
-        FormInfo formInfo = new ActivitiForm(processEngineMock).findFormForTask(TASK_ID, Rights.CLAIM);
+        FormInfo formInfo = new ActivitiForm(processEngineMock).findFormForTask(TASK_ID, USER);
         //then
         assertThat(formInfo.description).isEqualTo(TASK_DESCRIPTION);
         assertThat(formInfo.fields).hasSameSizeAs(testFormData.getFormProperties());
@@ -73,8 +80,10 @@ public class FormSpec extends AbstractTaskSpec {
         TaskFormData testFormData = testFormData(true);
         when(formServiceMock.getTaskFormData(TASK_ID)).thenReturn(testFormData);
         whenLookingForProcessDefinitonNameReturn(PROCESS_DEFINITION_NAME);
+        whenLookingForTaskReturn(testFormData.getTask());
+        when(taskServiceMock.getIdentityLinksForTask(TASK_ID)).thenReturn(Collections.emptyList());
         //when - then
-        assertThrown(() -> new ActivitiForm(processEngineMock).findFormForTask(TASK_ID, Rights.CLAIM))
+        assertThrown(() -> new ActivitiForm(processEngineMock).findFormForTask(TASK_ID, USER))
                 .isInstanceOf(DateParsingException.class);
     }
 
@@ -82,6 +91,7 @@ public class FormSpec extends AbstractTaskSpec {
         TaskFormDataImpl taskFormData = new TaskFormDataImpl();
         taskFormData.setTask(new TaskEntity());
         taskFormData.getTask().setDescription(TASK_DESCRIPTION);
+        taskFormData.getTask().setAssignee(USER_ID);
         List<FormProperty> formProperties = new ArrayList<>();
         formProperties.add(createFormProperty("first", "First", new StringFormType(), "value", true, false));
         formProperties.add(createFormProperty("second", "Second", new EnumFormType(Collections.singletonMap("id", "value")), null, false, true));

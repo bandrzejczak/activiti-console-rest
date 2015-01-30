@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import pl.edu.pw.ii.bpmConsole.valueObjects.AuthUser;
 import pl.edu.pw.ii.bpmConsole.valueObjects.TaskInfo;
 
 import java.util.*;
@@ -29,6 +30,7 @@ public class TaskListingSpec {
     public static final String PROCESS_DEFINITION_NAME = "name";
     public static final String PROCESS_DEFINITION_ID = "3";
     private static final List<String> USER_GROUPS = Arrays.asList("group1", "group2");
+    static final AuthUser USER = new AuthUser(USER_ID, USER_GROUPS);
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     TaskService taskServiceMock;
@@ -117,7 +119,7 @@ public class TaskListingSpec {
                         .singleResult()
         ).thenReturn(prepareProcessDefinition(PROCESS_DEFINITION_NAME));
         //when
-        List<TaskInfo> returnedTasks = new ActivitiTasks(processEngineMock).listAvailableFor(USER_ID, USER_GROUPS);
+        List<TaskInfo> returnedTasks = new ActivitiTasks(processEngineMock).listAvailableFor(USER);
         //then
         assertThat(returnedTasks).hasSize(2);
         assertThatReturnedTaskHasActivitiTaskData(returnedTasks, activitiTasks);

@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.mockito.Answers;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import pl.edu.pw.ii.bpmConsole.valueObjects.AuthUser;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,6 +21,7 @@ public abstract class AbstractTaskSpec {
     static final String TASK_ID = "1";
     static final String USER_ID = "user";
     static final List<String> USER_GROUPS = Arrays.asList("group1", "group2");
+    static final AuthUser USER = new AuthUser(USER_ID, USER_GROUPS);
     static final String PROCESS_DEFINITION_ID = "1";
     static final String PROCESS_DEFINITION_NAME = "name";
 
@@ -45,6 +47,7 @@ public abstract class AbstractTaskSpec {
         when(processEngineMock.getTaskService()).thenReturn(taskServiceMock);
         when(processEngineMock.getRepositoryService()).thenReturn(repositoryServiceMock);
         when(processEngineMock.getFormService()).thenReturn(formServiceMock);
+        when(taskServiceMock.createTaskQuery().active()).thenReturn(taskQueryMock);
     }
 
     protected void whenLookingForProcessDefinitonNameReturn(String name) {

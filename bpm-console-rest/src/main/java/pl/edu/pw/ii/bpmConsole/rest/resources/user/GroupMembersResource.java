@@ -4,8 +4,9 @@ import io.dropwizard.auth.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.edu.pw.ii.bpmConsole.interfaces.UserService;
-import pl.edu.pw.ii.bpmConsole.rest.filters.BpmUser;
 import pl.edu.pw.ii.bpmConsole.rest.resources.LinkBuilder;
+import pl.edu.pw.ii.bpmConsole.rest.resources.RightsVerification;
+import pl.edu.pw.ii.bpmConsole.valueObjects.AuthUser;
 import pl.edu.pw.ii.bpmConsole.valueObjects.UserIdInfo;
 
 import javax.validation.Valid;
@@ -17,7 +18,7 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/groups/{groupId}/members")
-public class GroupMembersResource {
+public class GroupMembersResource implements RightsVerification {
 
     private final UserService userService;
 
@@ -27,20 +28,22 @@ public class GroupMembersResource {
     }
 
     @POST
-    public Response add(@Auth BpmUser user, @PathParam("groupId") String groupId, @Valid UserIdInfo userIdInfo) {
+    public Response add(@Auth AuthUser user, @PathParam("groupId") String groupId, @Valid UserIdInfo userIdInfo) {
+        verifyAdminRights(user);
         userService.addMembership(groupId, userIdInfo.id);
         return Response
                 .ok()
-                .links(LinkBuilder.fromResource(GroupResource.class).rel("self").build())
+                .links(LinkBuilder.fromResource(GroupsResource.class).rel("self").build())
                 .build();
     }
 
     @DELETE
-    public Response delete(@Auth BpmUser user, @PathParam("groupId") String groupId, @Valid UserIdInfo userIdInfo) {
+    public Response delete(@Auth AuthUser user, @PathParam("groupId") String groupId, @Valid UserIdInfo userIdInfo) {
+        verifyAdminRights(user);
         userService.deleteMembership(groupId, userIdInfo.id);
         return Response
                 .ok()
-                .links(LinkBuilder.fromResource(GroupResource.class).rel("self").build())
+                .links(LinkBuilder.fromResource(GroupsResource.class).rel("self").build())
                 .build();
     }
 }

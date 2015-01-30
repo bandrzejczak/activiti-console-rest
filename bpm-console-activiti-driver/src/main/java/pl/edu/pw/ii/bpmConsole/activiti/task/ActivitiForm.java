@@ -7,14 +7,12 @@ import org.activiti.engine.form.TaskFormData;
 import org.activiti.engine.impl.form.DateFormType;
 import org.activiti.engine.impl.form.EnumFormType;
 import org.activiti.engine.task.Task;
+import pl.edu.pw.ii.bpmConsole.activiti.user.ActivitiUserRights;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.AccessDeniedException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.DateParsingException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.NoSuchTaskException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.UnclaimForbiddenException;
-import pl.edu.pw.ii.bpmConsole.valueObjects.FieldInfo;
-import pl.edu.pw.ii.bpmConsole.valueObjects.FormInfo;
-import pl.edu.pw.ii.bpmConsole.valueObjects.Rights;
-import pl.edu.pw.ii.bpmConsole.valueObjects.TaskInfo;
+import pl.edu.pw.ii.bpmConsole.valueObjects.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,7 +27,8 @@ public class ActivitiForm {
         this.processEngine = processEngine;
     }
 
-    public FormInfo findFormForTask(String taskId, Rights rightsToTask) {
+    public FormInfo findFormForTask(String taskId, AuthUser user) {
+        Rights rightsToTask = new ActivitiUserRights(processEngine, user).toTask(taskId);
         TaskFormData taskForm = getFormData(taskId).orElseThrow(() -> new NoSuchTaskException(taskId));
         if (!rightsToTask.canRead())
             throw new AccessDeniedException(taskId);
@@ -100,7 +99,7 @@ public class ActivitiForm {
     public void submit(String taskId, String userId, Map<String, String> properties) {
         ActivitiTasks activitiTasks = new ActivitiTasks(processEngine);
         activitiTasks.verifyTaskExists(taskId);
-        Rights rights = activitiTasks.getRightsToTask(taskId, userId, Collections.emptyList());
+        Rights rights = activitiTasks.getRightsToTask(taskId, new AuthUser(userId, Collections.emptyList()));
         if (!rights.canWrite())
             throw new UnclaimForbiddenException(taskId);
         processEngine.getFormService().submitTaskFormData(taskId, formatDates(taskId, properties));
@@ -135,5 +134,4 @@ public class ActivitiForm {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(datePattern);
         return simpleDateFormat.format(new Date(Long.valueOf(value)));
     }
-
 }

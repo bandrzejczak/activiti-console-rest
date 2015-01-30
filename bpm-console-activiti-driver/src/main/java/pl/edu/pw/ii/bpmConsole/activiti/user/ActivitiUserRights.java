@@ -4,21 +4,21 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.task.IdentityLinkType;
 import org.activiti.engine.task.Task;
 import pl.edu.pw.ii.bpmConsole.interfaces.UserRights;
+import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.AccessDeniedException;
+import pl.edu.pw.ii.bpmConsole.valueObjects.AuthUser;
+import pl.edu.pw.ii.bpmConsole.valueObjects.AuthUserGroup;
 import pl.edu.pw.ii.bpmConsole.valueObjects.Rights;
 
-import java.util.List;
 import java.util.Optional;
 
 public class ActivitiUserRights implements UserRights {
     private final ProcessEngine processEngine;
-    private final String userId;
-    private final List<String> groups;
+    private final AuthUser user;
     private String taskId;
 
-    public ActivitiUserRights(ProcessEngine processEngine, String userId, List<String> groups) {
+    public ActivitiUserRights(ProcessEngine processEngine, AuthUser user) {
         this.processEngine = processEngine;
-        this.userId = userId;
-        this.groups = groups;
+        this.user = user;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ActivitiUserRights implements UserRights {
 
     private Boolean isAssignee() {
         return getTask()
-                .map(task -> Boolean.valueOf(userId.equals(task.getAssignee())))
+                .map(task -> Boolean.valueOf(user.id.equals(task.getAssignee())))
                 .orElse(Boolean.FALSE);
     }
 
@@ -47,7 +47,7 @@ public class ActivitiUserRights implements UserRights {
                 .getIdentityLinksForTask(taskId)
                 .stream()
                 .anyMatch(i -> IdentityLinkType.CANDIDATE.equals(i.getType()) &&
-                        (userId.equals(i.getUserId()) || groups.contains(i.getGroupId())));
+                        (user.id.equals(i.getUserId()) || user.groups.contains(i.getGroupId())));
     }
 
     private Optional<Task> getTask() {
@@ -59,6 +59,12 @@ public class ActivitiUserRights implements UserRights {
                         .taskId(taskId)
                         .singleResult()
         );
+    }
+
+    @Override
+    public void toUser(String userId) {
+        if (user.isMemberOf(AuthUserGroup.ADMIN) || user.id.equals(userId))
+            throw new AccessDeniedException();
     }
 
 

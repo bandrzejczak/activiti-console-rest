@@ -4,8 +4,8 @@ import io.dropwizard.auth.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.edu.pw.ii.bpmConsole.interfaces.ProcessService;
-import pl.edu.pw.ii.bpmConsole.rest.filters.BpmUser;
 import pl.edu.pw.ii.bpmConsole.rest.resources.LinkBuilder;
+import pl.edu.pw.ii.bpmConsole.valueObjects.AuthUser;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -15,31 +15,31 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/processes")
-public class ProcessResource {
+public class ProcessesResource {
 
     private final ProcessService processService;
 
     @Autowired
-    public ProcessResource(ProcessService processService) {
+    public ProcessesResource(ProcessService processService) {
         this.processService = processService;
     }
 
 
     @GET
-    public Response list(@Auth BpmUser user) {
+    public Response list(@Auth AuthUser user) {
         return Response
-                .ok(processService.listStartableProcesses(user.id, user.groups))
-                .links(LinkBuilder.fromResource(ProcessResource.class).rel("self").build())
+                .ok(processService.listStartableProcesses(user))
+                .links(LinkBuilder.fromResource(ProcessesResource.class).rel("self").build())
                 .build();
     }
 
     @POST
     @Path("/{id}/start")
-    public Response start(@Auth BpmUser user, @PathParam("id") String processDefinitionId) {
-        processService.startProcess(processDefinitionId, user.id, user.groups);
+    public Response start(@Auth AuthUser user, @PathParam("id") String processDefinitionId) {
+        processService.startProcess(processDefinitionId, user);
         return Response
                 .noContent()
-                .links(LinkBuilder.fromResource(ProcessResource.class).rel("self").build())
+                .links(LinkBuilder.fromResource(ProcessesResource.class).rel("self").build())
                 .build();
     }
 
