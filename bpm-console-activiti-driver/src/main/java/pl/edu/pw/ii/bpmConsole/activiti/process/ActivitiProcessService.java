@@ -8,6 +8,7 @@ import pl.edu.pw.ii.bpmConsole.interfaces.ProcessService;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.NoSuchProcessException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.ProcessStartForbiddenException;
 import pl.edu.pw.ii.bpmConsole.valueObjects.ProcessDefinitionInfo;
+import pl.edu.pw.ii.bpmConsole.valueObjects.ProcessInstanceInfo;
 
 import java.util.Collection;
 import java.util.Date;
@@ -42,6 +43,11 @@ public class ActivitiProcessService implements ProcessService {
             throw new ProcessStartForbiddenException(processDefinitionId);
         processEngine.getIdentityService().setAuthenticatedUserId(userId);
         processEngine.getRuntimeService().startProcessInstanceById(processDefinitionId);
+    }
+
+    @Override
+    public List<ProcessInstanceInfo> listProcessInstances() {
+        return new ProcessInstances(processEngine).list();
     }
 
     private Boolean isStartableByUser(String processDefinitionId, String userId, List<String> groups) {

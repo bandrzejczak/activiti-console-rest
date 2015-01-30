@@ -53,7 +53,7 @@ public class ActivitiTasks {
                 .collect(Collectors.toList());
     }
 
-    TaskInfo mapTask(Task task) {
+    public TaskInfo mapTask(Task task) {
         TaskInfo taskInfo = new TaskInfo();
         taskInfo.id = task.getId();
         taskInfo.name = task.getName();
