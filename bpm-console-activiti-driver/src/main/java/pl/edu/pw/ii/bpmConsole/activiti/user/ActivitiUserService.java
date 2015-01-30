@@ -39,21 +39,6 @@ public class ActivitiUserService implements UserService {
 
     //TODO delete it!
     @Override
-    public void createUser(String login, String password) {
-        org.activiti.engine.identity.User activitiUser = processEngine.getIdentityService().newUser(login);
-        activitiUser.setPassword(password);
-        processEngine.getIdentityService().saveUser(activitiUser);
-    }
-
-    //TODO delete it!
-    @Override
-    public void createGroup(String name) {
-        Group group = processEngine.getIdentityService().newGroup(name);
-        processEngine.getIdentityService().saveGroup(group);
-    }
-
-    //TODO delete it!
-    @Override
     public void createMembership(String login, String groupName) {
         processEngine.getIdentityService().createMembership(login, groupName);
     }
@@ -91,5 +76,15 @@ public class ActivitiUserService implements UserService {
     @Override
     public void editUser(UserInfo userInfo, String userId) {
         new ActivitiUsers(processEngine.getIdentityService()).edit(userInfo, userId);
+    }
+
+    @Override
+    public void createGroup(GroupInfo groupInfo) {
+        new ActivitiGroups(processEngine.getIdentityService()).edit(groupInfo, null);
+    }
+
+    @Override
+    public void editGroup(GroupInfo groupInfo, String groupId) {
+        new ActivitiGroups(processEngine.getIdentityService()).edit(groupInfo, groupId);
     }
 }

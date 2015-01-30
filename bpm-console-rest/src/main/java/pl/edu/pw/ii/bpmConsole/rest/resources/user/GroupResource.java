@@ -6,7 +6,9 @@ import org.springframework.stereotype.Component;
 import pl.edu.pw.ii.bpmConsole.interfaces.UserService;
 import pl.edu.pw.ii.bpmConsole.rest.filters.BpmUser;
 import pl.edu.pw.ii.bpmConsole.rest.resources.LinkBuilder;
+import pl.edu.pw.ii.bpmConsole.valueObjects.GroupInfo;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -45,6 +47,25 @@ public class GroupResource {
     public Response getUserGroups(@Auth BpmUser user) {
         return Response
                 .ok(userService.getUserGroups(user.id))
+                .links(LinkBuilder.fromResource(GroupResource.class).rel("self").build())
+                .build();
+    }
+
+    @POST
+    public Response create(@Auth BpmUser user, @Valid GroupInfo groupInfo) {
+        userService.createGroup(groupInfo);
+        return Response
+                .noContent()
+                .links(LinkBuilder.fromResource(GroupResource.class).rel("self").build())
+                .build();
+    }
+
+    @PUT
+    @Path("/{id}")
+    public Response edit(@Auth BpmUser user, @PathParam("id") String groupId, @Valid GroupInfo groupInfo) {
+        userService.editGroup(groupInfo, groupId);
+        return Response
+                .noContent()
                 .links(LinkBuilder.fromResource(GroupResource.class).rel("self").build())
                 .build();
     }

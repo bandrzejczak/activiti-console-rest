@@ -5,6 +5,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import pl.edu.pw.ii.bpmConsole.interfaces.UserService;
+import pl.edu.pw.ii.bpmConsole.valueObjects.GroupInfo;
+import pl.edu.pw.ii.bpmConsole.valueObjects.GroupType;
 
 import java.util.Arrays;
 
@@ -36,11 +38,14 @@ public class DatabasePopulator implements ApplicationListener<ContextRefreshedEv
     }
 
     private void createUser(User user) {
-        userService.createUser(user.login, user.password);
+        userService.createUser(user.toUserInfo());
     }
 
     private void createUserGroup(User user) {
-        userService.createGroup(user.login);
+        GroupInfo groupInfo = new GroupInfo();
+        groupInfo.id = user.login;
+        groupInfo.type = GroupType.SECURITY_ROLE;
+        userService.createGroup(groupInfo);
     }
 
     private void addUserToUserGroup(User user) {
