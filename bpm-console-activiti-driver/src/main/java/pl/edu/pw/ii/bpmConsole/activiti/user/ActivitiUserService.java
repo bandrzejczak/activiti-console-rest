@@ -92,4 +92,9 @@ public class ActivitiUserService implements UserService {
     public void deleteUser(String userId) {
         new ActivitiUsers(processEngine.getIdentityService()).delete(userId);
     }
+
+    @Override
+    public void deleteGroup(String groupId) {
+        new ActivitiGroups(processEngine.getIdentityService()).delete(groupId);
+    }
 }

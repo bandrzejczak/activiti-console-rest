@@ -76,4 +76,9 @@ public class ActivitiGroups {
         group.setName(groupInfo.name);
         group.setType(groupInfo.type.name);
     }
+
+    public void delete(String groupId) {
+        findGroup(groupId).orElseThrow(() -> new NoSuchGroupException(groupId));
+        identityService.deleteGroup(groupId);
+    }
 }

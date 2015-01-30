@@ -101,7 +101,7 @@ public class ActivitiUsers {
     }
 
     public void delete(String userId) {
-        User user = findUser(userId).orElseThrow(() -> new NoSuchUserException(userId));
+        findUser(userId).orElseThrow(() -> new NoSuchUserException(userId));
         identityService.deleteUser(userId);
     }
 }

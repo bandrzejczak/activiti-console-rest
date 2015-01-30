@@ -69,4 +69,14 @@ public class GroupResource {
                 .links(LinkBuilder.fromResource(GroupResource.class).rel("self").build())
                 .build();
     }
+
+    @DELETE
+    @Path("/{id}")
+    public Response delete(@Auth BpmUser user, @PathParam("id") String groupId) {
+        userService.deleteGroup(groupId);
+        return Response
+                .ok()
+                .links(LinkBuilder.fromResource(GroupResource.class).rel("self").build())
+                .build();
+    }
 }
