@@ -70,4 +70,13 @@ public class UserResource {
                 .links(LinkBuilder.fromResource(UserResource.class).rel("self").build())
                 .build();
     }
+
+    @GET
+    @Path("/{id}/groups")
+    public Response getUserGroups(@Auth BpmUser user, @PathParam("id") String userId) {
+        return Response
+                .ok(userService.getUserGroups(userId))
+                .links(LinkBuilder.fromResource(GroupResource.class).rel("self").build())
+                .build();
+    }
 }

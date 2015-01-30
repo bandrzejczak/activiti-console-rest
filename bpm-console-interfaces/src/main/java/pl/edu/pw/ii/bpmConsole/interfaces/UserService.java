@@ -6,10 +6,7 @@ import pl.edu.pw.ii.bpmConsole.valueObjects.UserInfo;
 import java.util.List;
 
 public interface UserService {
-
-    List<String> getUserGroups(String username);
-
-    boolean checkPassword(String username, String password);
+    boolean validateCredentials(String username, String password);
 
     UserRights verifyRights(String id, List<String> groups);
 
@@ -32,6 +29,8 @@ public interface UserService {
     void deleteUser(String userId);
 
     void deleteGroup(String groupId);
+
+    List<String> getUserGroups(String userId);
 
     void addMembership(String groupId, String userId);
 

@@ -28,7 +28,7 @@ public class BpmAuthenticator implements Authenticator<BasicCredentials, BpmUser
     }
 
     private boolean credentialsAreValid(BasicCredentials credentials) {
-        return userService.checkPassword(credentials.getUsername(), credentials.getPassword());
+        return userService.validateCredentials(credentials.getUsername(), credentials.getPassword());
     }
 
     private BpmUser getUserData(BasicCredentials credentials) {

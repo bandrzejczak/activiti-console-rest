@@ -109,4 +109,14 @@ public class ActivitiGroups {
     private Optional<User> findUser(String userId) {
         return new ActivitiUsers(identityService).findUser(userId);
     }
+
+    public List<String> forUser(String userId) {
+        return identityService
+                .createGroupQuery()
+                .groupMember(userId)
+                .list()
+                .stream()
+                .map(Group::getId)
+                .collect(Collectors.toList());
+    }
 }

@@ -42,15 +42,6 @@ public class GroupResource {
                 .build();
     }
 
-    @GET
-    @Path("/user")
-    public Response getUserGroups(@Auth BpmUser user) {
-        return Response
-                .ok(userService.getUserGroups(user.id))
-                .links(LinkBuilder.fromResource(GroupResource.class).rel("self").build())
-                .build();
-    }
-
     @POST
     public Response create(@Auth BpmUser user, @Valid GroupInfo groupInfo) {
         userService.createGroup(groupInfo);

@@ -1,14 +1,12 @@
 package pl.edu.pw.ii.bpmConsole.activiti.user;
 
 import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.identity.Group;
 import pl.edu.pw.ii.bpmConsole.interfaces.UserRights;
 import pl.edu.pw.ii.bpmConsole.interfaces.UserService;
 import pl.edu.pw.ii.bpmConsole.valueObjects.GroupInfo;
 import pl.edu.pw.ii.bpmConsole.valueObjects.UserInfo;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ActivitiUserService implements UserService {
 
@@ -18,23 +16,9 @@ public class ActivitiUserService implements UserService {
         this.processEngine = processEngine;
     }
 
-    //TODO fix it!
     @Override
-    public List<String> getUserGroups(String username) {
-        return processEngine.getIdentityService()
-                .createGroupQuery()
-                .groupMember(username)
-                .list()
-                .stream()
-                .map(Group::getId)
-                .collect(Collectors.toList());
-    }
-
-    //TODO delete it!
-    @Override
-    public boolean checkPassword(String username, String password) {
-        return processEngine.getIdentityService()
-                .checkPassword(username, password);
+    public boolean validateCredentials(String userId, String password) {
+        return new ActivitiUsers(processEngine.getIdentityService()).validateCredentials(userId, password);
     }
 
     @Override
@@ -95,6 +79,11 @@ public class ActivitiUserService implements UserService {
     @Override
     public void addMembership(String groupId, String userId) {
         new ActivitiGroups(processEngine.getIdentityService()).addMembership(groupId, userId);
+    }
+
+    @Override
+    public List<String> getUserGroups(String userId) {
+        return new ActivitiGroups(processEngine.getIdentityService()).forUser(userId);
     }
 
     @Override

@@ -104,4 +104,8 @@ public class ActivitiUsers {
         findUser(userId).orElseThrow(() -> new NoSuchUserException(userId));
         identityService.deleteUser(userId);
     }
+
+    public Boolean validateCredentials(String userId, String password) {
+        return identityService.checkPassword(userId, password);
+    }
 }
