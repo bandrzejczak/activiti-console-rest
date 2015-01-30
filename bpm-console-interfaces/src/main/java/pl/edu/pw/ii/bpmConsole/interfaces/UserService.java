@@ -1,5 +1,6 @@
 package pl.edu.pw.ii.bpmConsole.interfaces;
 
+import pl.edu.pw.ii.bpmConsole.valueObjects.GroupInfo;
 import pl.edu.pw.ii.bpmConsole.valueObjects.UserInfo;
 
 import java.util.List;
@@ -19,4 +20,6 @@ public interface UserService {
     UserRights verifyRights(String id, List<String> groups);
 
     List<UserInfo> listUsers();
+
+    List<GroupInfo> listGroups();
 }
