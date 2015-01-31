@@ -43,12 +43,12 @@ public class ActivitiUsers {
         return mapUser(user);
     }
 
-    public void edit(UserInfo userInfo, String userId) {
+    public void edit(UserInfo userInfo, String userId, Boolean isAdmin) {
         Preconditions.checkArgument(creatingNewUserOrEditingExistingOne(userInfo, userId), "You cannot change user's id");
         User user = findUser(userInfo.id).orElse(newUser(userInfo.id));
         if (creatingNewUserWithExistingId(userId, user))
             throw new UserAlreadyExistsException(user.getId());
-        validatePasswords(user, userInfo);
+        validatePasswords(user, userInfo, isAdmin);
         updateData(user, userInfo);
         identityService.saveUser(user);
     }
@@ -70,10 +70,10 @@ public class ActivitiUsers {
         return userId == null && !Strings.isNullOrEmpty(user.getPassword());
     }
 
-    private void validatePasswords(User user, UserInfo userInfo) {
+    private void validatePasswords(User user, UserInfo userInfo, Boolean isAdmin) {
         if (isNewUserWithoutPassword(user, userInfo))
             throw new IllegalArgumentException("No password for new user");
-        if (isExistingUserWhosePasswordsDontMatch(user, userInfo))
+        if (!isAdmin && isExistingUserWhosePasswordsDontMatch(user, userInfo))
             throw new WrongPasswordException();
     }
 

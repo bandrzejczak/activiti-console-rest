@@ -48,13 +48,13 @@ public class ActivitiUserService implements UserService {
     }
 
     @Override
-    public void createUser(UserInfo userInfo) {
-        new ActivitiUsers(processEngine.getIdentityService()).edit(userInfo, null);
+    public void createUser(UserInfo userInfo, Boolean isAdmin) {
+        new ActivitiUsers(processEngine.getIdentityService()).edit(userInfo, null, isAdmin);
     }
 
     @Override
-    public void editUser(UserInfo userInfo, String userId) {
-        new ActivitiUsers(processEngine.getIdentityService()).edit(userInfo, userId);
+    public void editUser(UserInfo userInfo, String userId, Boolean isAdmin) {
+        new ActivitiUsers(processEngine.getIdentityService()).edit(userInfo, userId, isAdmin);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class ActivitiUserService implements UserService {
     }
 
     @Override
-    public List<String> getUserGroups(String userId) {
+    public List<GroupInfo> getUserGroups(String userId) {
         return new ActivitiGroups(processEngine.getIdentityService()).forUser(userId);
     }
 

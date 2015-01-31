@@ -110,13 +110,13 @@ public class ActivitiGroups {
         return new ActivitiUsers(identityService).findUser(userId);
     }
 
-    public List<String> forUser(String userId) {
+    public List<GroupInfo> forUser(String userId) {
         return identityService
                 .createGroupQuery()
                 .groupMember(userId)
                 .list()
                 .stream()
-                .map(Group::getId)
+                .map(this::mapGroup)
                 .collect(Collectors.toList());
     }
 }

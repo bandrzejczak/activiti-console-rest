@@ -38,7 +38,7 @@ public class DatabasePopulator implements ApplicationListener<ContextRefreshedEv
     }
 
     private void createUser(User user) {
-        userService.createUser(user.toUserInfo());
+        userService.createUser(user.toUserInfo(), true);
     }
 
     private void createUserGroup(User user) {

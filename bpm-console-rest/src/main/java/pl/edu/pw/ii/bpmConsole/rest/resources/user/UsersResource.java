@@ -7,6 +7,7 @@ import pl.edu.pw.ii.bpmConsole.interfaces.UserService;
 import pl.edu.pw.ii.bpmConsole.rest.resources.LinkBuilder;
 import pl.edu.pw.ii.bpmConsole.rest.resources.RightsVerification;
 import pl.edu.pw.ii.bpmConsole.valueObjects.AuthUser;
+import pl.edu.pw.ii.bpmConsole.valueObjects.AuthUserGroup;
 import pl.edu.pw.ii.bpmConsole.valueObjects.UserInfo;
 
 import javax.validation.Valid;
@@ -48,7 +49,7 @@ public class UsersResource implements RightsVerification {
     @POST
     public Response create(@Auth AuthUser user, @Valid UserInfo userInfo) {
         verifyAdminRights(user);
-        userService.createUser(userInfo);
+        userService.createUser(userInfo, user.isMemberOf(AuthUserGroup.ADMIN));
         return Response
                 .ok()
                 .links(LinkBuilder.fromResource(UsersResource.class).rel("self").build())
@@ -59,7 +60,7 @@ public class UsersResource implements RightsVerification {
     @Path("/{id}")
     public Response edit(@Auth AuthUser user, @PathParam("id") String userId, @Valid UserInfo userInfo) {
         userService.verifyRights(user).toUser(userId);
-        userService.editUser(userInfo, userId);
+        userService.editUser(userInfo, userId, user.isMemberOf(AuthUserGroup.ADMIN));
         return Response
                 .ok()
                 .links(LinkBuilder.fromResource(UsersResource.class).rel("self").build())

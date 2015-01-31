@@ -19,9 +19,9 @@ public interface UserService {
 
     GroupInfo getGroup(String groupId);
 
-    void createUser(UserInfo userInfo);
+    void createUser(UserInfo userInfo, Boolean isAdmin);
 
-    void editUser(UserInfo userInfo, String userId);
+    void editUser(UserInfo userInfo, String userId, Boolean isAdmin);
 
     void createGroup(GroupInfo groupInfo);
 
@@ -31,7 +31,7 @@ public interface UserService {
 
     void deleteGroup(String groupId);
 
-    List<String> getUserGroups(String userId);
+    List<GroupInfo> getUserGroups(String userId);
 
     void addMembership(String groupId, String userId);
 

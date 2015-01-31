@@ -10,6 +10,7 @@ import pl.edu.pw.ii.bpmConsole.interfaces.UserService;
 import pl.edu.pw.ii.bpmConsole.valueObjects.AuthUser;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class BpmAuthenticator implements Authenticator<BasicCredentials, AuthUser> {
@@ -37,6 +38,6 @@ public class BpmAuthenticator implements Authenticator<BasicCredentials, AuthUse
     }
 
     private List<String> getUserGroups(String username) {
-        return userService.getUserGroups(username);
+        return userService.getUserGroups(username).stream().map(g -> g.id).collect(Collectors.toList());
     }
 }
