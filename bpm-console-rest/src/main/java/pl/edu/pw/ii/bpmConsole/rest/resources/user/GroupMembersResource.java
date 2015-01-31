@@ -38,9 +38,10 @@ public class GroupMembersResource implements RightsVerification {
     }
 
     @DELETE
-    public Response delete(@Auth AuthUser user, @PathParam("groupId") String groupId, @Valid UserIdInfo userIdInfo) {
+    @Path("/{userId}")
+    public Response delete(@Auth AuthUser user, @PathParam("groupId") String groupId, @PathParam("userId") String userId) {
         verifyAdminRights(user);
-        userService.deleteMembership(groupId, userIdInfo.id);
+        userService.deleteMembership(groupId, userId);
         return Response
                 .ok()
                 .links(LinkBuilder.fromResource(GroupsResource.class).rel("self").build())
