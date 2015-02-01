@@ -42,8 +42,12 @@ public class ActivitiProcessService implements ProcessService {
         verifyProcessDefinitionExists(processDefinitionId);
         if (!isStartableByUser(processDefinitionId, user))
             throw new ProcessStartForbiddenException(processDefinitionId);
-        processEngine.getIdentityService().setAuthenticatedUserId(user.id);
-        processEngine.getRuntimeService().startProcessInstanceById(processDefinitionId);
+        try{
+            processEngine.getIdentityService().setAuthenticatedUserId(user.id);
+            processEngine.getRuntimeService().startProcessInstanceById(processDefinitionId);
+        } finally {
+            processEngine.getIdentityService().setAuthenticatedUserId(null);
+        }
     }
 
     @Override
