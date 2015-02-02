@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ActivitiForm {
+class ActivitiForm {
 
     private final ProcessEngine processEngine;
 
@@ -127,7 +127,6 @@ public class ActivitiForm {
                                 }
                         )
                 );
-
     }
 
     private String parseDate(String value, String datePattern) {

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface DeploymentService {
 
-    Deployment create(File deployment);
+    void deploy(File deployment);
 
     List<DeploymentInfo> list();
 

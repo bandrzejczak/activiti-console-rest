@@ -71,7 +71,7 @@ public class UsersResource implements RightsVerification {
     @Path("/{id}")
     public Response delete(@Auth AuthUser user, @PathParam("id") String userId) {
         verifyAdminRights(user);
-        userService.deleteUser(userId);
+        userService.deleteUser(userId, user.id);
         return Response
                 .ok()
                 .links(LinkBuilder.fromResource(UsersResource.class).rel("self").build())

@@ -25,29 +25,12 @@ public class ActivitiProcessService implements ProcessService {
 
     @Override
     public Collection<ProcessDefinitionInfo> listStartableProcesses(AuthUser user) {
-        return processEngine
-                .getRepositoryService()
-                .createProcessDefinitionQuery()
-                .active()
-                .latestVersion()
-                .list()
-                .stream()
-                .filter(p -> isStartableByUser(p.getId(), user))
-                .map(this::mapProcessDefinition)
-                .collect(Collectors.toList());
+        return new ProcessInstances(processEngine).listStartable(user);
     }
 
     @Override
     public void startProcess(String processDefinitionId, AuthUser user) {
-        verifyProcessDefinitionExists(processDefinitionId);
-        if (!isStartableByUser(processDefinitionId, user))
-            throw new ProcessStartForbiddenException(processDefinitionId);
-        try{
-            processEngine.getIdentityService().setAuthenticatedUserId(user.id);
-            processEngine.getRuntimeService().startProcessInstanceById(processDefinitionId);
-        } finally {
-            processEngine.getIdentityService().setAuthenticatedUserId(null);
-        }
+        new ProcessInstances(processEngine).start(processDefinitionId, user);
     }
 
     @Override
@@ -55,41 +38,4 @@ public class ActivitiProcessService implements ProcessService {
         return new ProcessInstances(processEngine).list();
     }
 
-    private Boolean isStartableByUser(String processDefinitionId, AuthUser user) {
-        List<IdentityLink> identityLinks = processEngine.getRepositoryService()
-                .getIdentityLinksForProcessDefinition(processDefinitionId);
-        return identityLinks.isEmpty() ||
-                identityLinks
-                        .stream()
-                        .anyMatch(i -> IdentityLinkType.CANDIDATE.equals(i.getType()) &&
-                                (user.id.equals(i.getUserId()) || user.groups.contains(i.getGroupId())));
-    }
-
-    private ProcessDefinitionInfo mapProcessDefinition(ProcessDefinition processDefinition) {
-        ProcessDefinitionInfo processDefinitionInfo = new ProcessDefinitionInfo();
-        processDefinitionInfo.id = processDefinition.getId();
-        processDefinitionInfo.name = processDefinition.getName();
-        processDefinitionInfo.version = processDefinition.getVersion();
-        processDefinitionInfo.deployTime = getDeploymentTime(processDefinition.getDeploymentId());
-        return processDefinitionInfo;
-    }
-
-    private Date getDeploymentTime(String deploymentId) {
-        return processEngine
-                .getRepositoryService()
-                .createDeploymentQuery()
-                .deploymentId(deploymentId)
-                .singleResult()
-                .getDeploymentTime();
-    }
-
-    private void verifyProcessDefinitionExists(String processDefinitionId) {
-        if (processEngine
-                .getRepositoryService()
-                .createProcessDefinitionQuery()
-                .active()
-                .processDefinitionId(processDefinitionId)
-                .singleResult() == null)
-            throw new NoSuchProcessException(processDefinitionId);
-    }
 }

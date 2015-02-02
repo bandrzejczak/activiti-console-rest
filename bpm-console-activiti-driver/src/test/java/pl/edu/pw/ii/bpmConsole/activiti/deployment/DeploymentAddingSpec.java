@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import pl.edu.pw.ii.bpmConsole.interfaces.Deployment;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.DeploymentTooBigException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.EmptyDeploymentException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.ProcessDeploymentFailedException;
@@ -117,7 +116,7 @@ public class DeploymentAddingSpec {
     public void shouldThrowExceptionIfTheFileIsTooBig(){
         //given
         File deployment = new File();
-        deployment.fileSize = Long.valueOf(Deployment.MAX_FILE_SIZE)+1;
+        deployment.fileSize = Long.valueOf(ActivitiDeployment.MAX_FILE_SIZE)+1;
         //when - then
         assertThrown(() -> new ActivitiDeployment(repositoryServiceMock, deployment))
                 .isInstanceOf(DeploymentTooBigException.class);

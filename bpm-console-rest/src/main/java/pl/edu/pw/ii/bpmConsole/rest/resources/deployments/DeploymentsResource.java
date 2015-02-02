@@ -30,7 +30,7 @@ public class DeploymentsResource implements RightsVerification {
     @POST
     public Response deploy(@Auth AuthUser user, File file) {
         verifyAdminRights(user);
-        deploymentService.create(file).deploy();
+        deploymentService.deploy(file);
         return Response.created(
                 UriBuilder
                         .fromResource(DeploymentsResource.class)

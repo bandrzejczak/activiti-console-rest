@@ -1,7 +1,6 @@
 package pl.edu.pw.ii.bpmConsole.activiti.deployment;
 
 import org.activiti.engine.RepositoryService;
-import pl.edu.pw.ii.bpmConsole.interfaces.Deployment;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.DeploymentTooBigException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.EmptyDeploymentException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.ProcessDeploymentFailedException;
@@ -12,7 +11,9 @@ import pl.edu.pw.ii.bpmConsole.valueObjects.ZipFile;
 import java.io.ByteArrayInputStream;
 import java.util.Optional;
 
-public class ActivitiDeployment implements Deployment {
+class ActivitiDeployment {
+    final static Integer MAX_FILE_SIZE = 3 * 1024 * 1024; //3MB
+    private static final String[] ALLOWED_EXTENSIONS = {".bpmn", ".bpmn20.xml"};
 
     private final RepositoryService repositoryService;
     private final File deployment;

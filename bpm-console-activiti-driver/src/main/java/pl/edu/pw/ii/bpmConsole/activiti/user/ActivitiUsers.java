@@ -4,16 +4,18 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.identity.User;
+import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.CannotDeleteOwnAccountException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.NoSuchUserException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.UserAlreadyExistsException;
 import pl.edu.pw.ii.bpmConsole.interfaces.exceptions.WrongPasswordException;
 import pl.edu.pw.ii.bpmConsole.valueObjects.UserInfo;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class ActivitiUsers {
+class ActivitiUsers {
     private final IdentityService identityService;
 
     public ActivitiUsers(IdentityService identityService) {
@@ -100,9 +102,11 @@ public class ActivitiUsers {
             user.setPassword(userInfo.newPassword);
     }
 
-    public void delete(String userId) {
-        findUser(userId).orElseThrow(() -> new NoSuchUserException(userId));
-        identityService.deleteUser(userId);
+    public void delete(String userToDeleteId, String currentUserId) {
+        if(Objects.equals(userToDeleteId, currentUserId))
+            throw new CannotDeleteOwnAccountException();
+        findUser(userToDeleteId).orElseThrow(() -> new NoSuchUserException(userToDeleteId));
+        identityService.deleteUser(userToDeleteId);
     }
 
     public Boolean validateCredentials(String userId, String password) {

@@ -22,18 +22,18 @@ public class ActivitiUserRights implements UserRights {
     }
 
     @Override
-    public Rights toTask(String taskId) {
-        this.taskId = taskId;
-        boolean isAssignee = isAssignee();
-        boolean isCandidate = isCandidate();
-        if (isAssignee && isCandidate)
-            return Rights.UNCLAIM;
-        if (isAssignee)
-            return Rights.WRITE;
-        if (isCandidate)
-            return Rights.CLAIM;
-        return Rights.NONE;
-    }
+public Rights toTask(String taskId) {
+    this.taskId = taskId;
+    boolean isAssignee = isAssignee();
+    boolean isCandidate = isCandidate();
+    if (isAssignee && isCandidate)
+        return Rights.UNCLAIM;
+    if (isAssignee)
+        return Rights.WRITE;
+    if (isCandidate)
+        return Rights.CLAIM;
+    return Rights.NONE;
+}
 
     private Boolean isAssignee() {
         return getTask()

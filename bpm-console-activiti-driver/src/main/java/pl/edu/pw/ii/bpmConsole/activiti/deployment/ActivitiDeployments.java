@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class ActivitiDeployments {
+class ActivitiDeployments {
     private final RepositoryService repositoryService;
 
     public ActivitiDeployments(RepositoryService repositoryService) {
@@ -70,7 +70,6 @@ public class ActivitiDeployments {
 
     public void remove(String processDefinitionId) {
         ProcessDefinition processDefinition = findProcessDefinition(processDefinitionId)
-                .map(p -> p)
                 .orElseThrow(() -> new ProcessDefinitionDoesntExistsException(processDefinitionId));
         repositoryService.deleteDeployment(processDefinition.getDeploymentId(), true);
     }

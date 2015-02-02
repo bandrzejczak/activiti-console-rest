@@ -27,7 +27,7 @@ public interface UserService {
 
     void editGroup(GroupInfo groupInfo, String groupId);
 
-    void deleteUser(String userId);
+    void deleteUser(String userToDeleteId, String currentUserId);
 
     void deleteGroup(String groupId);
 

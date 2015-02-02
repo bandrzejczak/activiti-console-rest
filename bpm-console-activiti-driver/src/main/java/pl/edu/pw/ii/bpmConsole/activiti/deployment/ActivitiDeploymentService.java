@@ -1,7 +1,6 @@
 package pl.edu.pw.ii.bpmConsole.activiti.deployment;
 
 import org.activiti.engine.RepositoryService;
-import pl.edu.pw.ii.bpmConsole.interfaces.Deployment;
 import pl.edu.pw.ii.bpmConsole.interfaces.DeploymentService;
 import pl.edu.pw.ii.bpmConsole.valueObjects.DeploymentInfo;
 import pl.edu.pw.ii.bpmConsole.valueObjects.File;
@@ -17,8 +16,8 @@ public class ActivitiDeploymentService implements DeploymentService {
     }
 
     @Override
-    public Deployment create(File deployment) {
-        return new ActivitiDeployment(repositoryService, deployment);
+    public void deploy(File deployment) {
+        new ActivitiDeployment(repositoryService, deployment).deploy();
     }
 
     @Override

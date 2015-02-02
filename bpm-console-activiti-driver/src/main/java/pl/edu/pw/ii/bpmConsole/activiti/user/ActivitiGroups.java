@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class ActivitiGroups {
+class ActivitiGroups {
     private final IdentityService identityService;
 
     public ActivitiGroups(IdentityService identityService) {
